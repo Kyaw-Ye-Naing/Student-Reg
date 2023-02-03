@@ -1,0 +1,248 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<style>
+    .c-container {
+        margin: 10px 2rem;
+    }
+
+    .card-chlid {
+        width: 250px;
+        height: 120px;
+        background-color: #fff;
+        margin: 2rem 0;
+        border-radius: 20px;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .icon-sec {
+        border-radius: 50%;
+        background-color: rgba(242,235,252,255);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 90px;
+        height: 90px;
+    }
+
+        .icon-sec i {
+            font-size: 2rem;
+            color: #742bde;
+        }
+
+    .icon-sec1 {
+        border-radius: 50%;
+        background-color: rgba(239,249,254,255);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 90px;
+        height: 90px;
+    }
+
+        .icon-sec1 i {
+            font-size: 2rem;
+            color: #41b6ff;
+        }
+
+    .icon-sec2 {
+        border-radius: 50%;
+        background-color: rgba(255,244,239,255);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 90px;
+        height: 90px;
+    }
+
+        .icon-sec2 i {
+            font-size: 2.5rem;
+            color: #ff8b4f;
+        }
+
+    .icon-sec3 {
+        border-radius: 50%;
+        background-color: rgba(255,238,242,255);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 90px;
+        height: 90px;
+    }
+
+        .icon-sec3 i {
+            font-size: 2.5rem;
+            color: #ff4c80;
+        }
+
+    .txt-sec {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .txt-sec .text-header {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .txt-sec .count {
+            font-size: 2rem;
+            color: #000;
+            font-weight: bold;
+        }
+</style>
+@ViewBag.Name
+@ViewBag.acc
+@ViewBag.accid
+<div class="c-container">
+    <div class="row">
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="card-chlid">
+                <div class="icon-sec">
+                    <i class="bi bi-pencil-square"></i>
+                </div>
+                <div class="txt-sec">
+                    <span class="count">10</span>
+                    <span class="text-header">Total Register Student</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="card-chlid">
+                <div class="icon-sec1">
+                    <i class="bi bi-pencil-square"></i>
+                </div>
+                <div class="txt-sec">
+                    <span class="count">10</span>
+                    <span class="text-header">Total UnRegister Student</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="card-chlid">
+                <div class="icon-sec2">
+                    <i class="bi bi-pencil-square"></i>
+                </div>
+                <div class="txt-sec">
+                    <span class="count">10</span>
+                    <span class="text-header">Total Course Student</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="card-chlid">
+                <div class="icon-sec3">
+                    <i class="bi bi-pencil-square"></i>
+                </div>
+                <div class="txt-sec">
+                    <span class="count">10</span>
+                    <span class="text-header">Total UnCourse Student</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <!-- Bar Chart -->
+    <div class="col-lg-6">
+        <div class="card ml-3">
+            <div class="card-body">
+                <h4 class="card-title">Student Result Bar chart</h4>
+                <canvas id="myChart" width="600" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card mr-3">
+            <div class="card-body">
+                <h4 class="card-title">Total Student Count Pie Chart</h4>
+                <div style="height:280px; width:500px;display:flex;justify-content:center;">
+                    <canvas id="myChart1" width="500" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/Chart.js/chart.js"></script>
+<script src="~/lib/Chart.js/chart.min.js"></script>
+<script src="~/lib/Chart.js/chart.umd.js"></script>
+<!-- Page-Level Scripts -->
+@section Scripts{
+    <script>
+        const ctx = document.getElementById('myChart');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['First Year', 'Second Year', 'Third Year', 'Fourth Year', 'Final Year'],
+                datasets: [{
+                    label: '# of pass',
+                    data: [12, 19, 3, 5, 2],
+                    borderWidth: 1,
+                    stack: 'Stack 0',
+                },
+                {
+                    label: '# fail',
+                    data: [6, 24, 10, 2, 6],
+                    borderWidth: 1,
+                    stack: 'Stack 1',
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Chart.js Bar Chart - Stacked'
+                    },
+                },
+                responsive: true,
+                interaction: {
+                    intersect: false,
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                    },
+                    y: {
+                        stacked: true
+                    }
+                }
+            }
+        });
+
+        const ctx1 = document.getElementById('myChart1');
+
+        new Chart(ctx1, {
+            type: 'pie',
+            data: {
+                labels: ['First Year', 'Second Year', 'Third Year', 'Fourth Year', 'Final Year'],
+                datasets: [
+                    {
+                        label: 'Dataset 1',
+                        data: [12, 19, 3, 5, 2, 3],
+                        //backgroundColor: Object.values(Utils.CHART_COLORS),
+                    }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Chart.js Pie Chart'
+                    }
+                }
+            },
+        });
+    </script>
+}

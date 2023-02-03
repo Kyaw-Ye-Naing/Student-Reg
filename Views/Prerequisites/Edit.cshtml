@@ -1,0 +1,114 @@
+﻿@model StudentRegistrationSys.Models.Data.TblPrerequisities
+@using StudentRegistrationSys.Common
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    label {
+        color: black;
+    }
+</style>
+<div class="card m-3">
+    <div class="card-body">
+        <h1>Edit Prerequisites Course Level</h1>
+
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+        <hr />
+
+        <div class="row">
+            <div class="col-12 col-lg-5 col-md-5">
+                <div class="basic-form">
+                    <form>
+                        <input type="hidden" asp-for="Id" />
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="PassCourseId" class="control-label">Pass Course</label>
+                            <select id="pcourse" class="form-control" asp-for="PassCourseId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetCourseList(Model.PassCourseId)">
+                            </select>
+                            <input type="hidden" asp-for="PassCourseId" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="NewCourseId" class="control-label">New Course</label>
+                            <select id="newcourse" class="form-control" asp-for="NewCourseId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetCourseList(Model.NewCourseId)">
+                            </select>
+                            <input type="hidden" asp-for="NewCourseId" />
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check mb-3">
+                                <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input" asp-for="Active">Active
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $('#pcourse').select2({
+            selectOnClose: true
+        });
+
+        $('#newcourse').select2({
+            selectOnClose: true
+        });
+    $("form").submit(function (e) {
+        e.preventDefault();
+        var $form = $(this);
+        var data = $form.serialize();
+        var l = $('#ladda-button').ladda();
+        l.ladda('start');
+        swal({
+            title: "Please Wait!",
+            text: "Data Saving Time",
+            type: "success",
+            showCancelButton: false,
+            showConfirmButton: false
+        })
+        setTimeout(function () {
+            CheckLogin(data);
+        },1500)
+    });
+
+    function CheckLogin(data) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("EditPrerequisities", "Prerequisites")',
+            data: data,
+            success: function (response) {
+                console.log("dfdsfsf", response);
+                if (response.status == "success") {
+                    swal.close();
+                    var l = $('#ladda-button').ladda();
+                    l.ladda('stop');
+                    document.getElementById("pname").value = "";
+                    document.getElementById("nname").value = "";
+                    toastr.success(response.message);
+
+                    window.location.href = '@Url.Action("Index", "Prerequisites")';
+                }
+                else {
+                   // StopLoading();
+                    swal.close();
+                    var l = $('#ladda-button').ladda();
+                    l.ladda('stop');
+                    toastr.error(response.message);
+                }
+            }
+        })
+    }
+    </script>
+}
+
+

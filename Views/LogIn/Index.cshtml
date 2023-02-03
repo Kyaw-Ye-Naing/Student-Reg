@@ -1,0 +1,98 @@
+﻿@model StudentRegistrationSys.Models.ViewModels.LogIn
+@{
+    Layout = "";
+}
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Quixlab - Bootstrap Admin Dashboard Template by Themefisher.com</title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/images/favicon.png">
+    <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous"> -->
+    <link href="~/theme/css/style.css" rel="stylesheet">
+    <link href="~/lib/toastr.js/toastr.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap-sweetalert/sweetalert.css" rel="stylesheet" />
+    <link href="~/lib/Ladda/ladda-themeless.min.css" rel="stylesheet" />
+    <link href="~/lib/Ladda/ladda.min.css" rel="stylesheet" />
+</head>
+
+<div class="login-form-bg h-100">
+    <div class="container h-100">
+        <div class="row justify-content-center h-100">
+            <div class="col-xl-6">
+                <div class="form-input-content">
+                    <div class="card login-form mb-0">
+                        <div class="card-body pt-5">
+                            <a class="text-center" href="index.html"> <h4>Student Registration System</h4></a>
+
+                            <form class="mt-5 mb-5 login-input">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Account" asp-for="AccountName" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" placeholder="Password" asp-for="Password" required>
+                                </div>
+                                <button type ="submit" class="btn ladda-button w-100" style="background-color: #7571f9;color:#fff;" data-spinner-color="#fff" id="btnLogin" data-style="zoom-in">Sign In</button>
+                            </form>
+                            <p class="mt-5 login-form__footer">Dont have account? <a href="page-register.html" class="text-primary">Sign Up</a> now</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--**********************************
+       Scripts
+   ***********************************-->
+<script src="~/theme/plugins/common/common.min.js"></script>
+<script src="~/lib/theme-js/custom.min.js"></script>
+<script src="~/lib/theme-js/settings.js"></script>
+<script src="~/lib/theme-js/gleek.js"></script>
+<script src="~/lib/theme-js/styleSwitcher.js"></script>
+<script src="~/lib/toastr.js/toastr.min.js"></script>
+<script src="~/lib/bootstrap-sweetalert/sweetalert.js"></script>
+<script src="~/lib/Ladda/spin.min.js"></script>
+<script src="~/lib/Ladda/ladda.min.js"></script>
+<script src="~/lib/Ladda/ladda.jquery.min.js"></script>
+
+<script>
+    $("form").submit(function (e) {
+        e.preventDefault();
+        var $form = $(this);
+        var data = $form.serialize();
+        var l = $('.ladda-button').ladda();
+        l.ladda('start');
+        setTimeout(function () {
+            CheckLogin(data);
+        },1500)
+    });
+
+    function CheckLogin(data) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("CheckIsAuthenticated","LogIn")',
+            data: data,
+            success: function (response) {
+                if (response.status == "success") {
+                    var l = $('.ladda-button').ladda();
+                    l.ladda('stop');
+                    if (response.message == "admin") {
+                         window.location.href = '@Url.Action("Index","Home")';
+                    } else {
+                         window.location.href = '@Url.Action("StudentIndex", "Home")';
+                    }
+                }
+                else {
+                   // StopLoading();
+                    var l = $('.ladda-button').ladda();
+                    l.ladda('stop');
+                    toastr.error(response.message);
+                }
+            }
+        })
+    }
+</script>

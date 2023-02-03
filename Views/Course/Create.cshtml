@@ -1,0 +1,170 @@
+﻿@model StudentRegistrationSys.Models.Data.TblCourse
+@using StudentRegistrationSys.Common
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    label {
+        color: black;
+    }
+</style>
+<div class="card m-3">
+    <div class="card-body">
+        <h1>Add Course</h1>
+
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+        <hr />
+
+        <div class="basic-form">
+            <form>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row">
+                    <div class="col-12 col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" id="name" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Code" class="control-label"></label>
+                            <input asp-for="Code" class="form-control" id="code" />
+                            <span asp-validation-for="Code" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Description" class="control-label"></label>
+                            <textarea asp-for="Description" class="form-control h-150px" rows="6" id="comment"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label asp-for="YearLevelId" class="control-label">YearLevel</label>
+                            <select id="year-level" class="form-control" asp-for="YearLevelId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetYearLevelList(0)">
+                            </select>
+                            <input type="hidden" asp-for="YearLevelId" />
+
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SemesterId" class="control-label">Semester</label>
+                            <select id="semester" class="form-control" asp-for="SemesterId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetSemesterList(0)">
+                            </select>
+                            <input type="hidden" asp-for="SemesterId" />
+
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="AcademicYearId" class="control-label">AcademicYear</label>
+                            <select id="academic-year" class="form-control" asp-for="AcademicYearId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetAcademicYearList(0)">
+                            </select>
+                            <input type="hidden" asp-for="AcademicYearId" />
+
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="MajorCode" class="control-label">MajorCode</label>
+                            <select id="academic-year" class="form-control" asp-for="MajorCode" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetMajorCodeList(0.ToString())">
+                            </select>
+                            <input type="hidden" asp-for="MajorCode" />
+
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check mb-3">
+                                <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input" asp-for="Active" checked>Active
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
+                        </div>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+    $("form").submit(function (e) {
+        e.preventDefault();
+
+        var yearlevelId = $('#year-level').val();
+        var semesterId = $('#semester').val();
+        var academicyearId = $('#academic-year').val();
+
+        if (yearlevelId != 0) {
+            if (semesterId != 0) {
+                if (academicyearId != 0) {
+                    var $form = $(this);
+                    var data = $form.serialize();
+                    var l = $('#ladda-button').ladda();
+                    l.ladda('start');
+                    swal({
+                        title: "Please Wait!",
+                        text: "Data Saving Time",
+                        type: "success",
+                        showCancelButton: false,
+                        showConfirmButton: false
+                    })
+                    setTimeout(function () {
+                        CheckLogin(data);
+                    }, 1500)
+                }
+                else {
+                    toastr.error("Please select academic year name");
+                }
+            }
+            else {
+                toastr.error("Please select year semester name");
+            }
+        }
+        else
+        {
+            toastr.error("Please select year level name");
+        }
+      
+    });
+
+    function CheckLogin(data) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SaveCourse", "Course")',
+            data: data,
+            success: function (response) {
+                console.log("dfdsfsf", response);
+                if (response.status == "success") {
+                    swal.close();
+                    var l = $('#ladda-button').ladda();
+                    l.ladda('stop');
+                    document.getElementById("name").value = "";
+                    document.getElementById("code").value = "";
+                    document.getElementById("year-level").value = "";
+                    document.getElementById("semester").value = "";
+                    document.getElementById("academic-year").value = "";
+                    document.getElementById("comment").value = "";
+                    toastr.success(response.message);
+
+                   // window.location.href = '@Url.Action("Index", "Course")';
+                }
+                else {
+                   // StopLoading();
+                    swal.close();
+                    var l = $('#ladda-button').ladda();
+                    l.ladda('stop');
+                    toastr.error(response.message);
+                }
+            }
+        })
+    }
+    </script>
+}
+
+
+

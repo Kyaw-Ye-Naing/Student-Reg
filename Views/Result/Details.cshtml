@@ -1,0 +1,103 @@
+﻿@model StudentRegistrationSys.Models.ViewModels.StudentResult
+@using StudentRegistrationSys.Common
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    label {
+        color: black;
+    }
+</style>
+<div class="card m-3">
+    <div class="card-body">
+        <h1>Add Student Result</h1>
+
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+        <hr />
+
+
+        <div class="basic-form">
+            <form>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row">
+                    <div class="col-12 col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label asp-for="StudentId" class="control-label">Student</label>
+                            <select disabled id="student" class="form-control" asp-for="StudentId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetStudentList(Model.StudentId)">
+                            </select>
+                            <input type="hidden" asp-for="StudentId" />
+
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="YearLevelId" class="control-label">YearLevel</label>
+                            <select disabled id="year-level" class="form-control" asp-for="YearLevelId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetYearLevelList(Model.YearLevelId)">
+                            </select>
+                            <input type="hidden" asp-for="YearLevelId" />
+
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 col-md-6">
+
+                        <div class="form-group">
+                            <label asp-for="SemesterId" class="control-label">Semester</label>
+                            <select disabled id="semester" class="form-control" asp-for="SemesterId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetSemesterList(Model.SemesterId)">
+                            </select>
+                            <input type="hidden" asp-for="SemesterId" />
+
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="AcademicYearId" class="control-label">AcademicYear</label>
+                            <select disabled id="academic-year" class="form-control" asp-for="AcademicYearId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetAcademicYearList(Model.AcademicYearId)">
+                            </select>
+                            <input type="hidden" asp-for="AcademicYearId" />
+
+                        </div>
+                        @*<div class="form-group">
+                                <input type="submit" value="Create" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
+                            </div>*@
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+
+        <table class="table table-bordered" id="student-course">
+            <thead class="bg-primary" style="color:#fff;">
+                <tr>
+                    <td>Course Name</td>
+                    <td>Grade</td>
+                    <td>Description</td>
+                </tr>
+            </thead>
+            <tbody class="bg-light">
+                @for (var i = 0; i < Model.StudentResultDetails.Count; i++)
+                {
+                    <tr>
+                        <td><input type="text" id="coursename' + @i + '" asp-for="StudentResultDetails[i].CourseName" class="form-control" readonly></td>
+                        <td><input type="text" id="grade' + @i + '" asp-for="StudentResultDetails[i].Grade" class="form-control" readonly></td>
+                        <td><input type="text" id="description' + @i + '" asp-for="StudentResultDetails[i].Description" class="form-control" readonly></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+    </script>
+}
+
+
+

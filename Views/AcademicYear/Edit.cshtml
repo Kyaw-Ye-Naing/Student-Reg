@@ -1,0 +1,99 @@
+﻿
+@model StudentRegistrationSys.Models.Data.TblAcademicYear
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    label {
+        color: black;
+    }
+</style>
+<div class="card m-3">
+    <div class="card-body">
+        <h1>Edit Academic Year Level</h1>
+
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="Edit" asp-controller="YearLevel" formaction="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"></label>
+                        <input asp-for="Description" class="form-control" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="Active" /> @Html.DisplayNameFor(model => model.Active)
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+    $("form").submit(function (e) {
+        e.preventDefault();
+        var $form = $(this);
+        var data = $form.serialize();
+        var l = $('#ladda-button').ladda();
+        l.ladda('start');
+        swal({
+            title: "Please Wait!",
+            text: "Data Saving Time",
+            type: "success",
+            showCancelButton: false,
+            showConfirmButton: false
+        })
+        setTimeout(function () {
+            Save(data);
+        },1500)
+    });
+
+    function Save(data) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("EditAcademicYear", "AcademicYear")',
+            data: data,
+            success: function (response) {
+                console.log("dfdsfsf", response);
+                if (response.status == "success") {
+                    swal.close();
+                    var l = $('#ladda-button').ladda();
+                    l.ladda('stop');
+
+                    toastr.success(response.message);
+
+                    window.location.href = '@Url.Action("Index", "AcademicYear")';
+                }
+                else {
+                   // StopLoading();
+                    swal.close();
+                    var l = $('#ladda-button').ladda();
+                    l.ladda('stop');
+                    toastr.error(response.message);
+                }
+            }
+        })
+    }
+    </script>
+}

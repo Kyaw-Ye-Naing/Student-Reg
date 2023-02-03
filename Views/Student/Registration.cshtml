@@ -1,0 +1,155 @@
+﻿@model StudentRegistrationSys.Models.ViewModels.StudentInfo
+@using StudentRegistrationSys.Common
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout_stu.cshtml";
+}
+<style>
+    label {
+        color: black;
+    }
+
+    .radio-input {
+        width: 20px;
+        height: 20px;
+    }
+</style>
+<div class="card m-3">
+    <div class="card-body">
+        <h1>Student Registration</h1>
+
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+        <hr />
+        <div class="basic-form">
+            <form>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row">
+                    <div class="col-sm-12 col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" id="name" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="AccountId" class="control-label"></label>
+                            <input asp-for="AccountId" class="form-control" id="accountid" />
+                            <span asp-validation-for="AccountId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="DegreeProgram" class="control-label"></label>
+                            <input asp-for="DegreeProgram" class="form-control" id="name" />
+                            <span asp-validation-for="DegreeProgram" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SectionId" class="control-label">Section</label>
+                            <select id="section" class="form-control" asp-for="SectionId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetSectionList(0)">
+                            </select>
+                            <input type="hidden" asp-for="SectionId" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SemesterId" class="control-label">Semester</label>
+                            <select id="semester" class="form-control" asp-for="SemesterId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetSemesterList(0)">
+                            </select>
+                            <input type="hidden" asp-for="SemesterId" />
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label asp-for="AcademicYearId" class="control-label">AcademicYear</label>
+                            <select id="semester" class="form-control" asp-for="AcademicYearId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetAcademicYearList(0)">
+                            </select>
+                            <input type="hidden" asp-for="AcademicYearId" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input asp-for="Email" class="form-control" id="accountid" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Phone" class="control-label"></label>
+                            <input asp-for="Phone" class="form-control" id="accountid" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Address" class="control-label"></label>
+                            <input asp-for="Address" class="form-control" id="accountid" />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                        <div class="form-inline">
+                            <div class="form-check mb-3 mr-2">
+                                <input type="radio" class="form-check-input radio-input" asp-for="Gender" value="male">Male
+                            </div>
+                            <div class="form-check mb-3">
+                                <input type="radio" class="form-check-input radio-input" asp-for="Gender" value="male">Female
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+
+        //$(function () {
+        //    $("#section").select2();
+        //});
+
+    $("form").submit(function (e) {
+        e.preventDefault();
+        var $form = $(this);
+        var data = $form.serialize();
+        var l = $('#ladda-button').ladda();
+        l.ladda('start');
+        swal({
+            title: "Please Wait!",
+            text: "Data Saving Time",
+            type: "success",
+            showCancelButton: false,
+            showConfirmButton: false
+        })
+        setTimeout(function () {
+            Save(data);
+        },1500)
+    });
+
+    function Save(data) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SaveRegistration", "Student")',
+            data: data,
+            success: function (response) {
+                console.log("dfdsfsf", response);
+                if (response.status == "success") {
+                    swal.close();
+                    var l = $('#ladda-button').ladda();
+                    l.ladda('stop');
+                    document.getElementById("name").value = "";
+                    document.getElementById("comment").value = "";
+                    toastr.success(response.message);
+
+                   // window.location.href = '@Url.Action("Index", "Student")';
+                }
+                else {
+                   // StopLoading();
+                    swal.close();
+                    var l = $('#ladda-button').ladda();
+                    l.ladda('stop');
+                    toastr.error(response.message);
+                }
+            }
+        })
+    }
+    </script>
+}
+

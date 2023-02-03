@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card m-3">
+    <div class="card-body">
+        <h1>Excel Export for Result</h1>
+
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="ImportExcel" asp-controller="Result" formaction="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <input class="form-control" type="file" name="file"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

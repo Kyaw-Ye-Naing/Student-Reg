@@ -1,0 +1,109 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout_stu.cshtml";
+}
+<style>
+    input[type=checkbox] {
+        outline: 2px solid #7571f9;
+    }
+
+    span {
+        color: #000;
+    }
+
+    .parent {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+        .parent .prev {
+            width: 100%;
+            height: 200px;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            padding: 20px;
+        }
+
+            .parent .prev .course-gp-par {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 2rem;
+            }
+
+                .parent .prev .course-gp-par .course-gp {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                    align-items: center;
+                    justify-content: center;
+                }
+</style>
+<div class="container parent">
+    <h1 class="mt-2">Course Selection</h1>
+    <div class="prev">
+        <h6>First Year Courses</h6>
+        <div class="course-gp-par">
+            <div class="course-gp">
+                <span>English</span>
+                <input type="checkbox" class="form-check" />
+            </div>
+            <div class="course-gp">
+                <span>Digital Logic</span>
+                <input type="checkbox" class="form-check" />
+            </div>
+            <div class="course-gp">
+                <span>Math</span>
+                <input type="checkbox" class="form-check" />
+            </div>
+            <div class="course-gp">
+                <span>Data Structure</span>
+                <input type="checkbox" class="form-check" />
+            </div>
+            <div class="course-gp">
+                <span>C# Programming</span>
+                <input type="checkbox" class="form-check" />
+            </div>
+            <div class="course-gp">
+                <span>Data Comm</span>
+                <input type="checkbox" class="" />
+            </div>
+        </div>
+    </div>
+    <div class="prev">
+        <h6>Second Year Courses</h6>
+        <div class="course-gp-par">
+            <div class="course-gp">
+                <span>Algorithm</span>
+                <input type="checkbox" class="form-check" />
+            </div>
+            <div class="course-gp">
+                <span>English</span>
+                <input type="checkbox" class="form-check" />
+            </div>
+            <div class="course-gp">
+                <span>Java Programming</span>
+                <input type="checkbox" class="form-check" />
+            </div>
+            <div class="course-gp">
+                <span>Visual Basic</span>
+                <input type="checkbox" class="form-check" />
+            </div>
+            <div class="course-gp">
+                <span>Networking</span>
+                <input type="checkbox" class="form-check" />
+            </div>
+            <div class="course-gp">
+                <span>Mis</span>
+                <input type="checkbox" class="" />
+            </div>
+        </div>
+    </div>
+    <div class="button text-center">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+</div>

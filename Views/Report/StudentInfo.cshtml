@@ -1,0 +1,142 @@
+﻿@model StudentRegistrationSys.Models.ViewModels.StudentInfoReportView
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .dataTables_length select {
+        border: 2px solid #7571f9ab;
+    }
+
+    .dataTables_filter input {
+        border: 2px solid #7571f9ab;
+    }
+
+    tbody {
+        color: black;
+    }
+
+    th {
+        color: #fff;
+    }
+
+
+    .radio-input {
+        width: 20px;
+        height: 20px;
+    }
+</style>
+
+<input type="hidden" value="@ViewBag.Noti" id="hfNoti" />
+
+<div class="card m-2">
+    <div class="card-body">
+        <h4>Filter Account</h4>
+        <form asp-action="Search" asp-controller="Report" formaction="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+          
+            <div class="form-inline">
+              
+                    <div class="form-check mr-3">
+                        <input type="radio" class="form-check-input radio-input" asp-for="Status" value="lock">Lock
+                    </div>
+                    <div class="form-check mr-3">
+                        <input type="radio" class="form-check-input radio-input" asp-for="Status" value="unlock">Unlock
+                    </div>
+                    <div class="form-check mr-5">
+                        <input type="radio" class="form-check-input radio-input" asp-for="Status" value="all">All
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="View" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
+                    </div>
+                    
+                
+            </div>
+        </form>
+    </div>
+</div>
+
+    <div class="card m-2">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>Student Info Report</h1>
+                <button class="btn btn-outline-primary" id="create">
+                    <i class="bi bi-plus-circle"></i>&nbsp;
+                    Add New Account
+                </button>
+            </div>
+
+            <table id="myTable" class="table table-sm table-striped table-bordered" style="width:100%">
+                <thead>
+                    <tr class="bg-primary">
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            AccountId
+                        </th>
+                        <th>
+                            Email
+                        </th>
+                        <th>
+                          Year Level
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for(var i = 0; i < Model.studentInfoReportViews.Count ;i++)
+                    {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => modelItem.studentInfoReportViews[i].Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => modelItem.studentInfoReportViews[i].AccountId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => modelItem.studentInfoReportViews[i].Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => modelItem.studentInfoReportViews[i].YearLevelName)
+                        </td>
+                        <td>
+                            <a class="btn btn-outline-warning" asp-action="StudentInfoDetails" asp-controller="Report" asp-route-id="@Model.studentInfoReportViews[i].Id" style="padding-top:0;padding-bottom:0;">
+                                <span style="font-size:12px;"><i class="bi bi-pencil-square"></i>&nbsp;Details</span>
+                            </a>
+                            <a class="btn btn-outline-danger" asp-action="Edit" asp-controller="Report" asp-route-id="@Model.studentInfoReportViews[i].Id" style="padding-top:0;padding-bottom:0;">
+                                <span style="font-size:12px;"><i class="bi bi-pencil-square"></i>&nbsp;Lock</span>
+                            </a>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+                <tfoot>
+
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <!-- Page-Level Scripts -->
+    @section Scripts{
+        <script>
+        $(document).ready(function () {
+             $('#myTable').DataTable({
+                 "pageLength": 5,
+                 "lengthMenu": [5,8, 10, 15]
+            });
+        });
+
+        $("#create").click(function () {
+            window.location.href = '@Url.Action("CreateStudent", "Student")';
+        });
+        </script>
+    }
+
+
+
+
+

@@ -1,0 +1,153 @@
+﻿@model StudentRegistrationSys.Models.ViewModels.TimeTableInfocs
+@using StudentRegistrationSys.Common
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .select-box {
+        width: 200px;
+        height: 0;
+    }
+
+    label {
+        color: black;
+        font-size: 12px;
+    }
+
+    h3 {
+        margin-top: 10px;
+        margin-left: 20px;
+    }
+</style>
+<form>
+    <div class="card m-3">
+        <div class="card-title">
+            <h3>View TimeTable</h3>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mx-4 mt-2">
+                <div class="row">
+                    <div class="col-12 col-lg-3 col-md-6 col-sm-6">
+                        <div class="form-group mb-0">
+                            <label class="control-label">Section</label>
+                            <select id="student" class="select-box form-control" asp-for="SectionId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetSectionList(0)" disabled>
+                            </select>
+                            <input type="hidden" asp-for="SectionId" />
+
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-3 col-md-6 col-sm-6">
+
+                        <div class="form-group mb-0">
+                            <label class="control-label">YearLevel</label>
+                            <select id="year-level" class="select-box form-control" asp-for="YearLevelId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetYearLevelList(0)" disabled>
+                            </select>
+                            <input type="hidden" asp-for="YearLevelId" />
+
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-3 col-md-6 col-sm-6">
+                        <div class="form-group mb-0">
+                            <label class="control-label">Semester</label>
+                            <select id="semester" class="select-box form-control" asp-for="SemesterId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetSemesterList(0)" disabled>
+                            </select>
+                            <input type="hidden" asp-for="SemesterId" />
+
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-3 col-md-6 col-sm-6">
+                        <div class="form-group mb-0">
+                            <label class="control-label">AcademicYear</label>
+                            <select id="academic-year" class="select-box form-control" asp-for="AcademicYearId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetAcademicYearList(0)" disabled>
+                            </select>
+                            <input type="hidden" asp-for="AcademicYearId" />
+
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-3 col-md-6 col-sm-6">
+                        @*<div class="form-group">
+                                <input type="submit" value="Create" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
+                            </div>*@
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="card-body">
+            <table id="myTable" class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                    <tr class="bg-primary" style="color:#fff;">
+                        <th width="70">
+                        </th>
+                        <th>
+                            Period 1
+                        </th>
+                        <th>
+                            Period 2
+                        </th>
+                        <th>
+                            Period 3
+                        </th>
+                        <th>
+                            Period 4
+                        </th>
+                        <th>
+                            Period 5
+                        </th>
+                        <th>
+                            Period 6
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var j = 0; j < 5; j++)
+                    {
+
+                        var temp_day = "";
+                        switch (j)
+                        {
+                            case 0:
+                                temp_day = "Mon";
+                                break;
+                            case 1:
+                                temp_day = "Tue";
+                                break;
+                            case 2:
+                                temp_day = "Wed";
+                                break;
+                            case 3:
+                                temp_day = "Thurs";
+                                break;
+                            case 4:
+                                temp_day = "Fri";
+                                break;
+                            default:
+                                // code block
+                                break;
+                        }
+
+                        <tr>
+                            <td style="background-color: #7571f9b5;">
+                                <span style="color:#fff;">@temp_day</span>
+                            </td>
+
+                            @for (var i = 0; i < 6; i++)
+                            {
+                              
+                        <td>
+                            <input class="form-control" type="text" asp-for="TableInfocsDetails[i + (j * 6)].CourseName" readonly/>
+                        </td>
+
+                            }
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</form>

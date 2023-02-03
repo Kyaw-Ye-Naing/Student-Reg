@@ -1,0 +1,106 @@
+﻿@model IEnumerable<StudentRegistrationSys.Models.Data.TblPeriod>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .dataTables_length select {
+        border: 2px solid #7571f9ab;
+    }
+
+    .dataTables_filter input {
+        border: 2px solid #7571f9ab;
+    }
+
+    tbody {
+        color: black;
+    }
+
+    th {
+        color: #fff;
+    }
+</style>
+
+<input type="hidden" value="@ViewBag.Noti" id="hfNoti" />
+
+<div class="card m-2">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>Period for Timetable List</h1>
+            <button class="btn btn-outline-primary" id="create">
+                <i class="bi bi-plus-circle"></i>&nbsp;
+                Add New
+            </button>
+        </div>
+
+        <table id="myTable" class="tablentable-sm table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr class="bg-primary">
+                    <th>
+                        @Html.DisplayNameFor(model => model.PeriodName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.StartTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EndTime)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PeriodName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndTime)
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-warning" asp-action="Edit" asp-controller="Period" asp-route-id="@item.Id" style="padding-top:0;padding-bottom:0;">
+                            <span style="font-size:12px;"><i class="bi bi-pencil-square"></i>&nbsp;Manage</span>
+                        </a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+            <tfoot>
+
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<!-- Page-Level Scripts -->
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+             $('#myTable').DataTable({
+                 "pageLength": 5,
+                 "lengthMenu": [5,8, 10, 15]
+            });
+        });
+
+        $("#create").click(function () {
+            window.location.href = '@Url.Action("Create","Period")';
+        });
+    </script>
+}
+
+
+
+
+

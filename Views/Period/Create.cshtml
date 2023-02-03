@@ -1,0 +1,116 @@
+﻿@model StudentRegistrationSys.Models.Data.TblPeriod
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    label {
+        color: black;
+    }
+</style>
+<div class="card m-3">
+    <div class="card-body">
+        <h1>Add Period for Timetable</h1>
+
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+        <hr />
+
+        <div class="row">
+            <div class="col-12 col-lg-5 col-md-5">
+                <div class="basic-form">
+                    <form>
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="PeriodName" class="control-label"></label>
+                            <input asp-for="PeriodName" class="form-control" id="name" />
+                            <span asp-validation-for="PeriodName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="StartTime" class="control-label"></label>
+                            <input type="time" asp-for="StartTime" class="form-control" id="starttime" />
+                            <span asp-validation-for="StartTime" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EndTime" class="control-label"></label>
+                            <input type="time" asp-for="EndTime" class="form-control" id="endtime" />
+                            <span asp-validation-for="EndTime" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Description" class="control-label"></label>
+                            <textarea asp-for="Description" class="form-control h-150px" rows="4" id="comment"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check mb-3">
+                                <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input" asp-for="Active" checked>Active
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+    $("form").submit(function (e) {
+        e.preventDefault();
+        var $form = $(this);
+        var data = $form.serialize();
+        var l = $('#ladda-button').ladda();
+        l.ladda('start');
+        swal({
+            title: "Please Wait!",
+            text: "Data Saving Time",
+            type: "success",
+            showCancelButton: false,
+            showConfirmButton: false
+        })
+        setTimeout(function () {
+            CheckLogin(data);
+        },1500)
+    });
+
+    function CheckLogin(data) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SavePeriod", "Period")',
+            data: data,
+            success: function (response) {
+                console.log("dfdsfsf", response);
+                if (response.status == "success") {
+                    swal.close();
+                    var l = $('#ladda-button').ladda();
+                    l.ladda('stop');
+                    document.getElementById("name").value = "";
+                    document.getElementById("comment").value = "";
+                    document.getElementById("starttime").value = "";
+                    document.getElementById("endtime").value = "";
+                    toastr.success(response.message);
+
+                   // window.location.href = '@Url.Action("Index", "Period")';
+                }
+                else {
+                   // StopLoading();
+                    swal.close();
+                    var l = $('#ladda-button').ladda();
+                    l.ladda('stop');
+                    toastr.error(response.message);
+                }
+            }
+        })
+    }
+    </script>
+}
+
+

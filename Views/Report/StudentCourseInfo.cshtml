@@ -1,0 +1,176 @@
+﻿@model StudentRegistrationSys.Models.ViewModels.StudentCourseSearch
+@using StudentRegistrationSys.Common
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .dataTables_length select {
+        border: 2px solid #7571f9ab;
+    }
+
+    .dataTables_filter input {
+        border: 2px solid #7571f9ab;
+    }
+
+    tbody {
+        color: black;
+    }
+
+    th {
+        color: #fff;
+    }
+
+
+    .radio-input {
+        width: 20px;
+        height: 20px;
+    }
+</style>
+
+<input type="hidden" value="@ViewBag.Noti" id="hfNoti" />
+
+<div class="card m-2">
+    <div class="card-body" style="padding:1rem;">
+        <h4>Filter Account</h4>
+        <form asp-action="SearchCourse" asp-controller="Report" formaction="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="row">
+                <div class="col-3">
+                    <div class="form-group">
+                        <label asp-for="AcademicYearId" class="control-label">AcademicYear</label>
+                        <select id="ac-year" class="form-control" asp-for="AcademicYearId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetAcademicYearList(Model.AcademicYearId)">
+                        </select>
+                        <input type="hidden" asp-for="AcademicYearId" />
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label asp-for="YearLevelId" class="control-label">YearLevel</label>
+                        <select id="year-level" class="form-control" asp-for="YearLevelId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetYearLevelForReport(Model.YearLevelId)">
+                        </select>
+                        <input type="hidden" asp-for="YearLevelId" />
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label asp-for="RegistrationId" class="control-label">Register</label>
+                        <select id="register" class="form-control" asp-for="RegistrationId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetRegisterList(Model.RegistrationId)">
+                        </select>
+                        <input type="hidden" asp-for="RegistrationId" />
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label asp-for="CourseSelectId" class="control-label">CourseSelect</label>
+                        <select id="year-level" class="form-control" asp-for="CourseSelectId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetCourseSelectList(Model.CourseSelectId)">
+                        </select>
+                        <input type="hidden" asp-for="CourseSelectId" />
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <input type="submit" value="View" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card m-2">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>Student Course Report</h2>
+            <button class="btn btn-outline-primary" id="create">
+                <i class="bi bi-plus-circle"></i>&nbsp;
+                Add New Account
+            </button>
+        </div>
+
+        <table id="myTable" class="table table-sm table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr class="bg-primary">
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        AccountId
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Year Level
+                    </th>
+                    <th>
+                        Registration
+                    </th>
+                    <th>
+                        Course Selection
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (var i = 0; i < Model.StudentCourseInfos.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => modelItem.StudentCourseInfos[i].Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => modelItem.StudentCourseInfos[i].AccountId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => modelItem.StudentCourseInfos[i].Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => modelItem.StudentCourseInfos[i].YearLevelName)
+                        </td>
+                        <td>
+                            pending
+                        </td>
+                        <td>
+                            finished
+                        </td>
+                        <td>
+                            <a class="btn btn-outline-warning" asp-action="StudentInfoDetails" asp-controller="Report" asp-route-id="@Model.StudentCourseInfos[i].Id" style="padding-top:0;padding-bottom:0;">
+                                <span style="font-size:12px;"><i class="bi bi-pencil-square"></i>&nbsp;Details</span>
+                            </a>
+                            <a class="btn btn-outline-danger" asp-action="Edit" asp-controller="Report" asp-route-id="@Model.StudentCourseInfos[i].Id" style="padding-top:0;padding-bottom:0;">
+                                <span style="font-size:12px;"><i class="bi bi-pencil-square"></i>&nbsp;Lock</span>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<!-- Page-Level Scripts -->
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+             $('#myTable').DataTable({
+                 "pageLength": 5,
+                 "lengthMenu": [5,8, 10, 15]
+            });
+        });
+
+        $("#create").click(function () {
+            window.location.href = '@Url.Action("CreateStudent", "Student")';
+        });
+    </script>
+}
+
+
+
+
+

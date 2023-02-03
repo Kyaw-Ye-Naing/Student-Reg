@@ -1,0 +1,205 @@
+﻿@model StudentRegistrationSys.Models.ViewModels.StudentResult
+@using StudentRegistrationSys.Common
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    label {
+        color: black;
+    }
+</style>
+<div class="card m-3">
+    <div class="card-body">
+        <h1>Add Student Result</h1>
+
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+        <hr />
+
+        <div class="basic-form">
+            <form id="myForm">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row">
+                    <div class="col-12 col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label asp-for="StudentId" class="control-label"></label>
+                            <select id="student" class="form-control" asp-for="StudentId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetStudentList(0)">
+                            </select>
+                            <input type="hidden" asp-for="StudentId" />
+
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="YearLevelId" class="control-label">YearLevel</label>
+                            <select id="year-level" class="form-control" asp-for="YearLevelId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetYearLevelList(0)">
+                            </select>
+                            <input type="hidden" asp-for="YearLevelId" />
+
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 col-md-6">
+
+                        <div class="form-group">
+                            <label asp-for="SemesterId" class="control-label">Semester</label>
+                            <select id="semester" class="form-control" asp-for="SemesterId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetSemesterList(0)">
+                            </select>
+                            <input type="hidden" asp-for="SemesterId" />
+
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="AcademicYearId" class="control-label">AcademicYear</label>
+                            <select id="academic-year" class="form-control" asp-for="AcademicYearId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetAcademicYearList(0)">
+                            </select>
+                            <input type="hidden" asp-for="AcademicYearId" />
+
+                        </div>
+                        @*<div class="form-group">
+                                <input type="submit" value="Create" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
+                            </div>*@
+                    </div>
+                </div>
+
+                <table class="table table-bordered" id="student-course">
+                    <thead class="bg-primary" style="color:#fff;">
+                        <tr>
+                            <td>Course Name</td>
+                            <td>Grade</td>
+                            <td>Description</td>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-light">
+                        <tr>
+                            <td colspan="3" class="no-data text-center">No Data</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </form>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" form="myForm" value="Create" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $('#student').on('change', () => {
+            $('#student-course tbody').empty();
+            var studentId = $('#student').val();
+            if (studentId != 0) {
+                var rowCount = $('.count').length;
+                $.ajax(
+                    {
+                        url: '/Result/GetCourseInfo',
+                        data: { id: studentId }
+                    }
+                ).done(function (data) {
+                    console.log("data", data);
+                    if (data.rresult != null) {
+                        $(".no-data").hide();
+
+                        for (var i = 0; i < data.rresult.length; i++) {
+
+                            var markup = '<tr class="count">' +
+                                '<td><input type = "text" id="coursename' + rowCount + '" name="StudentResultDetails['+ rowCount + '].CourseName" class="form-control" value="' + data.rresult[i].courseName + '"></td>' +
+                                '<td><input type = "text" id="grade' + rowCount + '" name="StudentResultDetails[' + rowCount + '].Grade" class="form-control" value="' + data.rresult[i].grade + '"></td>' +
+                                '<td><input type = "text" id="description' + rowCount + '" name="StudentResultDetails[' + rowCount + '].Description" class="form-control" value="' + data.rresult[i].description + '"></td></tr>'
+                            console.log("looping", markup);
+
+                            $("#student-course > tbody").append(markup);
+                            rowCount = rowCount + 1;
+                        }
+                    } else {
+                        toastr.error();
+                    }
+                });
+            }
+        });
+
+    $("form").submit(function (e) {
+        e.preventDefault();
+
+        var yearlevelId = $('#year-level').val();
+        var semesterId = $('#semester').val();
+        var academicyearId = $('#academic-year').val();
+        var studentId = $('#student').val();
+
+        if (studentId != 0) {
+            if (yearlevelId != 0) {
+                if (semesterId != 0) {
+                    if (academicyearId != 0) {
+                        var $form = $(this);
+                        console.log("data", $form);
+                        var data = $form.serialize();
+
+                        var l = $('#ladda-button').ladda();
+                        l.ladda('start');
+                        swal({
+                            title: "Please Wait!",
+                            text: "Data Saving Time",
+                            type: "success",
+                            showCancelButton: false,
+                            showConfirmButton: false
+                        })
+                        setTimeout(function () {
+                            CheckLogin(data);
+                        }, 1500)
+                    }
+                    else {
+                        toastr.error("Please select academic year name");
+                    }
+                }
+                else {
+                    toastr.error("Please select year semester name");
+                }
+            }
+            else {
+                toastr.error("Please select year level name");
+            }
+        }
+        else {
+            toastr.error("Please select student name");
+        }
+    });
+
+    function CheckLogin(data) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SaveResult", "Result")',
+            data: data,
+            success: function (response) {
+                console.log("dfdsfsf", response);
+                if (response.status == "success") {
+                    swal.close();
+                    var l = $('#ladda-button').ladda();
+                    l.ladda('stop');
+                    document.getElementById("name").value = "";
+                    document.getElementById("code").value = "";
+                    document.getElementById("year-level").value = "";
+                    document.getElementById("semester").value = "";
+                    document.getElementById("academic-year").value = "";
+                    document.getElementById("comment").value = "";
+                    toastr.success(response.message);
+
+                   // window.location.href = '@Url.Action("Index", "Result")';
+                }
+                else {
+                   // StopLoading();
+                    swal.close();
+                    var l = $('#ladda-button').ladda();
+                    l.ladda('stop');
+                    toastr.error(response.message);
+                }
+            }
+        })
+    }
+    </script>
+}
+
+
+
