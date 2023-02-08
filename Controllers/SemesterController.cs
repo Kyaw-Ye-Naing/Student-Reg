@@ -64,13 +64,13 @@ namespace StudentRegistrationSys.Controllers
         // POST: Semester/Edit/5
         public ActionResult EditSemester(TblSemester semester)
         {
-                var isExist = _context.TblSemester.Any(a => a.Active == true && a.Name == semester.Name);
+                //var isExist = _context.TblSemester.Any(a => a.Active == true && a.Name == semester.Name);
 
-                if (!isExist) {
-                if (semester.Active == true)
-                {
+                //if (!isExist) {
+               // if (semester.Active == true)
+               // {
                     _context.TblSemester.FromSqlInterpolated($"Update tbl_Semester Set active = 0;");
-                }
+                //}
                     TblSemester tblSemester = _context.TblSemester.Find(semester.Id);
 
                     tblSemester.Name = semester.Name;
@@ -81,9 +81,9 @@ namespace StudentRegistrationSys.Controllers
                     _context.SaveChanges();
 
                     return Json(new { status = "success", message = "Data Saving Successfully" });
-                }
+               // }
 
-                return Json(new { status = "fail", message = "Semester name already exist" });
+               // return Json(new { status = "fail", message = "Semester name already exist" });
         }
     }
 }

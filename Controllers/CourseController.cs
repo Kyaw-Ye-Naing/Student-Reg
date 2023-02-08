@@ -461,6 +461,136 @@ namespace StudentRegistrationSys.Controllers
                 //    return Json(new { status = "fail", message = "Your fail course don't match!" });
                 //}
                 #endregion
+                //---check same subject code
+                if (prevCount != 0)
+                {
+                    if (courseSelectionInfo.PrevYearLevelId == 1 && courseSelectionInfo.NextYearLevelId == 2)
+                    {
+                        var t = getcurrentSemester == 1 ? 1 : 2; 
+
+                        foreach (var item in nextActivelist)
+                        {
+                            if(item.CourseCode == "E-200" + t)
+                            {
+                                var isExist = prevActivelist.Any(a => a.IsSelected == true && a.CourseCode == "M-100" + t);
+                                if (isExist)
+                                {
+                                    return Json(new
+                                    {
+                                        status = "fail",
+                                        message = "E-200"+ t +" and M-100"+ t+ "is same exam day!"
+                                    });
+                                }
+                            }
+                            if (item.CourseCode == "CST-201" + t)
+                            {
+                                var isExist = prevActivelist.Any(a => a.IsSelected == true && a.CourseCode == "E-100" + t);
+                                if (isExist)
+                                {
+                                    return Json(new
+                                    {
+                                        status = "fail",
+                                        message = "CST-201" + t + " and E-100" + t + "is same exam day!"
+                                    });
+                                }
+                            }
+                            if (item.CourseCode == "CST-202" + t)
+                            {
+                                var isExist = prevActivelist.Any(a => a.IsSelected == true && a.CourseCode == "P-100" + t);
+                                if (isExist)
+                                {
+                                    return Json(new
+                                    {
+                                        status = "fail",
+                                        message = "CST-202" + t + " and P-100" + t + "is same exam day!"
+                                    });
+                                }
+                            }
+                            if (item.CourseCode == "CST-203" + t)
+                            {
+                                var isExist = prevActivelist.Any(a => a.IsSelected == true && a.CourseCode == "CST-101" + t);
+                                if (isExist)
+                                {
+                                    return Json(new
+                                    {
+                                        status = "fail",
+                                        message = "CST-203" + t + " and CST-101" + t + "is same exam day!"
+                                    });
+                                }
+                            }
+                            if (item.CourseCode == "CST-204" + t)
+                            {
+                                var isExist = prevActivelist.Any(a => a.IsSelected == true && a.CourseCode == "CST-102" + t);
+                                if (isExist)
+                                {
+                                    return Json(new
+                                    {
+                                        status = "fail",
+                                        message = "CST-204" + t + " and CST-102" + t + "is same exam day!"
+                                    });
+                                }
+                            }
+                            if (item.CourseCode == "CST-205" + t)
+                            {
+                                var isExist = prevActivelist.Any(a => a.IsSelected == true && a.CourseCode == "CST-103" + t);
+                                if (isExist)
+                                {
+                                    return Json(new
+                                    {
+                                        status = "fail",
+                                        message = "CST-205" + t + " and CST-103" + t + "is same exam day!"
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item00 in nextActivelist)
+                        {
+                            var nextcode = "";
+
+                            string[] newstr = item00.CourseCode.Split("-");
+
+                            if (newstr.Length == 2)
+                            {
+                                nextcode = newstr[1].Substring(1, 2);
+                            }
+                            if (newstr.Length == 3)
+                            {
+                                nextcode = newstr[2].Substring(1, 2);
+                            }
+
+
+                            foreach (var item44 in prevActivelist)
+                            {
+                                var prevcode = "";
+
+                                string[] newstr2 = item44.CourseCode.Split("-");
+
+                                if (newstr2.Length == 2)
+                                {
+                                    prevcode = newstr2[1].Substring(1, 2);
+                                }
+                                if (newstr2.Length == 3)
+                                {
+                                    prevcode = newstr2[2].Substring(1, 2);
+                                }
+
+                                if (nextcode == prevcode)
+                                {
+                                    return Json(new
+                                    {
+                                        status = "fail",
+                                        message = item00.CourseCode + " and " + item44.CourseCode + " is same code!"
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    
+                }
+
 
                 //--check prerequisite of next course
 
@@ -494,7 +624,7 @@ namespace StudentRegistrationSys.Controllers
                             var code = courseList.Where(a => a.Id == item89.PassCourseId).FirstOrDefault().Code;
                             return Json(new
                             { status = "fail",
-                              message = item56.CourseCode + " and " + code + " is prerequisite course! You fail" + code
+                              message = item56.CourseCode + " and " + code + " is prerequisite course! You fail " + code
                             });
                         }
                     }
@@ -512,14 +642,16 @@ namespace StudentRegistrationSys.Controllers
                                    on tm.Id equals td.TimeTableId
                                    join c in _context.TblCourse
                                    on td.CourseId equals c.Id
-                                   where tm.SemesterId == courseSelectionInfo.PrevSemesterId && tm.AcademicYearId == courseSelectionInfo.PrevAcademicId
+                                   where tm.SemesterId == courseSelectionInfo.PrevSemesterId 
+                                   //&& tm.AcademicYearId == courseSelectionInfo.PrevAcademicId
                                    && tm.YearLevelId == courseSelectionInfo.PrevYearLevelId && tm.SectionId == courseSelectionInfo.PrevMajorId
                                    select new
                                    {
                                        td.PeriodId,
                                        td.Day,
                                        td.CourseId,
-                                       c.Code
+                                       c.Code,
+                                       td.Id
                                    }).ToList();
 
                     var result2 = (from tm in _context.TblTimeTable
@@ -527,14 +659,16 @@ namespace StudentRegistrationSys.Controllers
                                    on tm.Id equals td.TimeTableId
                                    join c in _context.TblCourse
                                    on td.CourseId equals c.Id
-                                   where tm.SemesterId == courseSelectionInfo.NextSemesterId && tm.AcademicYearId == courseSelectionInfo.NextAcademicId
+                                   where tm.SemesterId == courseSelectionInfo.NextSemesterId 
+                                   //&& tm.AcademicYearId == courseSelectionInfo.NextAcademicId
                                    && tm.YearLevelId == courseSelectionInfo.NextYearLevelId && tm.SectionId == courseSelectionInfo.NextMajorId
                                    select new
                                    {
                                        td.PeriodId,
                                        td.Day,
                                        td.CourseId,
-                                       c.Code
+                                       c.Code,
+                                       td.Id
                                    }).ToList();
 
                     foreach (var item3 in courseSelectionInfo.PrevCourse)
@@ -548,11 +682,14 @@ namespace StudentRegistrationSys.Controllers
                                 PeriodId = (int)item4.PeriodId,
                                 Day = item4.Day,
                                 CourseCode = item4.Code,
-                                CourseId = (int)item4.CourseId
+                                CourseId = (int)item4.CourseId,
+                                Id = item4.Id
                             });
                         }
 
                     }
+
+                    prevTimeTableDetails = prevTimeTableDetails.OrderBy(a => a.Id).ToList();
 
                     foreach (var item6 in courseSelectionInfo.NextCourse)
                     {
@@ -565,11 +702,14 @@ namespace StudentRegistrationSys.Controllers
                                 PeriodId = (int)item5.PeriodId,
                                 Day = item5.Day,
                                 CourseCode = item5.Code,
-                                CourseId = (int)item5.CourseId
+                                CourseId = (int)item5.CourseId,
+                                Id = item5.Id
                             });
                         }
 
                     }
+
+                    nextTimeTableDetails = nextTimeTableDetails.OrderBy(a => a.Id).ToList();
 
                     foreach (var item7 in prevTimeTableDetails)
                     {
@@ -593,21 +733,24 @@ namespace StudentRegistrationSys.Controllers
 
             foreach (var item99 in courseSelectionInfo.NextCourse)
             {
-                TblSubjectCourse tblSubjectCourse = new TblSubjectCourse()
+                if (item99.IsSelected == true)
                 {
-                    StudentId = accid,
-                    AcademicYearId = courseSelectionInfo.NextAcademicId,
-                    Active = true,
-                    SemesterId = courseSelectionInfo.NextSemesterId,
-                    SectionId = courseSelectionInfo.NextMajorId,
-                    Code = item99.CourseCode,
-                    CourseId = item99.CourseId,
-                    CreatedDate = DateTime.Now,
-                    YearLevelId = courseSelectionInfo.NextYearLevelId
-                };
+                    TblSubjectCourse tblSubjectCourse = new TblSubjectCourse()
+                    {
+                        StudentId = accid,
+                        AcademicYearId = courseSelectionInfo.NextAcademicId,
+                        Active = true,
+                        SemesterId = courseSelectionInfo.NextSemesterId,
+                        SectionId = courseSelectionInfo.NextMajorId,
+                        Code = item99.CourseCode,
+                        CourseId = item99.CourseId,
+                        CreatedDate = DateTime.Now,
+                        YearLevelId = courseSelectionInfo.NextYearLevelId
+                    };
 
-                _context.TblSubjectCourse.Add(tblSubjectCourse);
-                _context.SaveChanges();
+                    _context.TblSubjectCourse.Add(tblSubjectCourse);
+                    _context.SaveChanges();
+                }    
             }
 
             var acinfo = _context.TblStudentInfo.Where(a => a.AccountId == accid && a.Active == true).FirstOrDefault();

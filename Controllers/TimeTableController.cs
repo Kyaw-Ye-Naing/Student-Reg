@@ -76,6 +76,7 @@ namespace StudentRegistrationSys.Controllers
                                       join c in _context.TblCourse
                                       on td.CourseId equals c.Id
                                       where td.TimeTableId == result.Id
+                                      orderby td.Id
                                       select new TimeTableInfocsDetails
                                       {
                                           CourseId = (int)td.CourseId,

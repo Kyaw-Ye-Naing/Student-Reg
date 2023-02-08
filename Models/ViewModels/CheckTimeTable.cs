@@ -11,5 +11,6 @@ namespace StudentRegistrationSys.Models.ViewModels
         public string CourseCode { get; set; }
         public int PeriodId { get; set; }
         public string Day { get; set; }
+        public int Id { get; set; }
     }
 }

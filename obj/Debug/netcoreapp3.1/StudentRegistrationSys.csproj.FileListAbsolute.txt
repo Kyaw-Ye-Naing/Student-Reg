@@ -898,3 +898,4 @@ D:\Sample\StudentRegistrationSys\obj\Debug\netcoreapp3.1\StudentRegistrationSys.
 D:\Sample\StudentRegistrationSys\obj\Debug\netcoreapp3.1\StudentRegistrationSys.genruntimeconfig.cache
 D:\Sample\StudentRegistrationSys\obj\Debug\netcoreapp3.1\StudentRegistrationSys.csproj.AssemblyReference.cache
 D:\Sample\StudentRegistrationSys\obj\Debug\netcoreapp3.1\Razor\Views\Report\StudentCourseDetails.cshtml.g.cs
+D:\Sample\StudentRegistrationSys\obj\Debug\netcoreapp3.1\Razor\Views\Student\ChangePassword.cshtml.g.cs

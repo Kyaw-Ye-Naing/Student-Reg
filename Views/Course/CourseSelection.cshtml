@@ -8,110 +8,110 @@
 <h1 class="my-2 text-center">Course Selection</h1>
 
 <form>
-<div class="parent">
-    @if (Model.PrevCourse != null) 
-    { 
-    <div class="prev">
-        <input type="hidden" asp-for="PrevAcademicId" />
-        <input type="hidden" asp-for="PrevSemesterId" />
-        <input type="hidden" asp-for="PrevMajorId" />
-        <input type="hidden" asp-for="PrevYearLevelId" />
-        <div style="display:flex;gap:15px;">
-            <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.PrevAcademic)</h6>
-            <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.PrevYearLevel)</h6>
-            <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.PrevMajor)</h6>
-        </div>
-       
-
-        <div class="course-gp-par">
-            @for (var i = 0; i < Model.PrevCourse.Count; i++)
-            {
-            <div class="course-gp">
-                <input type="hidden" asp-for="PrevCourse[i].CourseId" />
-                <input type="hidden" asp-for="PrevCourse[i].CourseCode" />
-                <input type="hidden" asp-for="PrevCourse[i].CourseName" />
-                <span>
-                    @Html.DisplayFor(modelItem => modelItem.PrevCourse[i].CourseCode)&nbsp;
-                    @Html.DisplayFor(modelItem => modelItem.PrevCourse[i].CourseName)
-                </span>
-                <input type="checkbox" class="form-check" asp-for="PrevCourse[i].IsSelected"/>
+    <div class="parent">
+        <div class="prev">
+            <input type="hidden" asp-for="NextAcademicId" />
+            <input type="hidden" asp-for="NextMajorId" />
+            <input type="hidden" asp-for="NextSemesterId" />
+            <input type="hidden" asp-for="NextYearLevelId" />
+            <div style="display:flex;gap:15px;">
+                <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.NextAcademic)</h6>
+                <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.NextYearLevel)</h6>
+                <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.NextMajor)</h6>
             </div>
-                @*<div class="course-gp">
-                    <span>(CST-1002) Digital Logic</span>
-                    <input type="checkbox" class="form-check" />
-                </div>
-                <div class="course-gp">
-                    <span>(CST-1002) Math</span>
-                    <input type="checkbox" class="form-check" />
-                </div>
-                <div class="course-gp">
-                    <span>(CST-1002) Data Structure</span>
-                    <input type="checkbox" class="form-check" />
-                </div>
-                <div class="course-gp">
-                    <span>(CST-1002) C# Programming</span>
-                    <input type="checkbox" class="form-check" />
-                </div>
-                <div class="course-gp">
-                    <span>(CST-1002) Data Comm</span>
-                    <input type="checkbox" class="" />
-                </div>*@
-            }
+            <div class="course-gp-par">
+                @for (var i = 0; i < Model.NextCourse.Count; i++)
+                {
+                    <div class="course-gp">
+                        <input type="hidden" asp-for="NextCourse[i].CourseId" />
+                        <input type="hidden" asp-for="NextCourse[i].CourseCode" />
+                        <input type="hidden" asp-for="NextCourse[i].CourseName" />
+                        <span>
+                            @Html.DisplayFor(modelItem => modelItem.NextCourse[i].CourseCode)&nbsp;
+                            @Html.DisplayFor(modelItem => modelItem.NextCourse[i].CourseName)
+                        </span>
+                        <input type="checkbox" class="form-check" asp-for="NextCourse[i].IsSelected" />
+                    </div>
+                    @*<div class="course-gp">
+                        <span>(CST-1002) English</span>
+                        <input type="checkbox" class="form-check" />
+                    </div>
+                    <div class="course-gp">
+                        <span>(CST-1002) Java Programming</span>
+                        <input type="checkbox" class="form-check" />
+                    </div>
+                    <div class="course-gp">
+                        <span>(CST-1002) Visual Basic</span>
+                        <input type="checkbox" class="form-check" />
+                    </div>
+                    <div class="course-gp">
+                        <span>(CST-1002) Networking</span>
+                        <input type="checkbox" class="form-check" />
+                    </div>
+                    <div class="course-gp">
+                        <span>(CST-1002) Mis</span>
+                        <input type="checkbox" class="" />
+                    </div>*@
+                }
+            </div>
         </div>
-
-    </div>
-    }
-<div class="prev">
-    <input type="hidden" asp-for="NextAcademicId" />
-    <input type="hidden" asp-for="NextMajorId" />
-    <input type="hidden" asp-for="NextSemesterId" />
-    <input type="hidden" asp-for="NextYearLevelId" />
-    <div style="display:flex;gap:15px;">
-        <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.NextAcademic)</h6>
-        <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.NextYearLevel)</h6>
-        <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.NextMajor)</h6>
-    </div>
-    <div class="course-gp-par">
-        @for (var i = 0; i < Model.NextCourse.Count; i++)
+        @if (Model.PrevCourse != null)
         {
-            <div class="course-gp">
-                <input type="hidden" asp-for="NextCourse[i].CourseId" />
-                <input type="hidden" asp-for="NextCourse[i].CourseCode" />
-                <input type="hidden" asp-for="NextCourse[i].CourseName" />
-                <span>
-                    @Html.DisplayFor(modelItem => modelItem.NextCourse[i].CourseCode)&nbsp;
-                    @Html.DisplayFor(modelItem => modelItem.NextCourse[i].CourseName)
-                </span>
-                <input type="checkbox" class="form-check" asp-for="NextCourse[i].IsSelected" />
-            </div>
-            @*<div class="course-gp">
-                    <span>(CST-1002) English</span>
-                    <input type="checkbox" class="form-check" />
+            <div class="prev">
+                <input type="hidden" asp-for="PrevAcademicId" />
+                <input type="hidden" asp-for="PrevSemesterId" />
+                <input type="hidden" asp-for="PrevMajorId" />
+                <input type="hidden" asp-for="PrevYearLevelId" />
+                <div style="display:flex;gap:15px;">
+                    <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.PrevAcademic)</h6>
+                    <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.PrevYearLevel)</h6>
+                    <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.PrevMajor)</h6>
                 </div>
-                <div class="course-gp">
-                    <span>(CST-1002) Java Programming</span>
-                    <input type="checkbox" class="form-check" />
-                </div>
-                <div class="course-gp">
-                    <span>(CST-1002) Visual Basic</span>
-                    <input type="checkbox" class="form-check" />
-                </div>
-                <div class="course-gp">
-                    <span>(CST-1002) Networking</span>
-                    <input type="checkbox" class="form-check" />
-                </div>
-                <div class="course-gp">
-                    <span>(CST-1002) Mis</span>
-                    <input type="checkbox" class="" />
-                </div>*@
-        }
-    </div>
-</div>
-    <div class="button text-center">
-        <input type="submit" value="Save" class="btn btn-primary" />
-    </div>
 
-</div>
+
+                <div class="course-gp-par">
+                    @for (var i = 0; i < Model.PrevCourse.Count; i++)
+                    {
+                        <div class="course-gp">
+                            <input type="hidden" asp-for="PrevCourse[i].CourseId" />
+                            <input type="hidden" asp-for="PrevCourse[i].CourseCode" />
+                            <input type="hidden" asp-for="PrevCourse[i].CourseName" />
+                            <span>
+                                @Html.DisplayFor(modelItem => modelItem.PrevCourse[i].CourseCode)&nbsp;
+                                @Html.DisplayFor(modelItem => modelItem.PrevCourse[i].CourseName)
+                            </span>
+                            <input type="checkbox" class="form-check" asp-for="PrevCourse[i].IsSelected" />
+                        </div>
+                        @*<div class="course-gp">
+                            <span>(CST-1002) Digital Logic</span>
+                            <input type="checkbox" class="form-check" />
+                        </div>
+                        <div class="course-gp">
+                            <span>(CST-1002) Math</span>
+                            <input type="checkbox" class="form-check" />
+                        </div>
+                        <div class="course-gp">
+                            <span>(CST-1002) Data Structure</span>
+                            <input type="checkbox" class="form-check" />
+                        </div>
+                        <div class="course-gp">
+                            <span>(CST-1002) C# Programming</span>
+                            <input type="checkbox" class="form-check" />
+                        </div>
+                        <div class="course-gp">
+                            <span>(CST-1002) Data Comm</span>
+                            <input type="checkbox" class="" />
+                        </div>*@
+                    }
+                </div>
+
+            </div>
+        }
+        <div class="button text-center">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+
+    </div>
     </form>
 
 @section Scripts {

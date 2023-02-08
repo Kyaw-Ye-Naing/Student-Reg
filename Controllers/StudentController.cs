@@ -178,5 +178,26 @@ namespace StudentRegistrationSys.Controllers
 
             return Json(new { status = "success", message = "Data Saving Successfully" });
         }
+
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        public IActionResult SaveChangePassword(ChangePassword changePassword)
+        {
+            var accid = HttpContext.Session.GetInt32(SessionId);
+
+            var result = _context.TblStudentAccount.Find(accid);
+
+            if (result.Password == changePassword.OldPassword)
+            {
+                result.Password = changePassword.NewPassword;
+                _context.SaveChanges();
+
+                return Json(new { status = "success", message = "Data Saving Successfully" });
+            }
+            return Json(new { status = "fail", message = "Old password don't match!" });
+        }
     }
 }
