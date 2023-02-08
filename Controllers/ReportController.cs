@@ -33,6 +33,7 @@ namespace StudentRegistrationSys.Controllers
                            select new StudentInfoReportViewDetails
                            {
                                Id = stu.Id,
+                               Active = stu.Active,
                                Name = stu.Name,
                                Email = stu.Email,
                                AccountId = stu.AccountId,
@@ -40,11 +41,11 @@ namespace StudentRegistrationSys.Controllers
                                YearLevelName = y.Name
                            }).ToList();
 
-            if(status == "lock")
+            if(status == "active")
             {
                 studentInfo = studentInfo.Where(a => a.Active).ToList();
             }
-            if (status == "unlock")
+            if (status == "inactive")
             {
                 studentInfo = studentInfo.Where(a => a.Active == false).ToList();
             }
@@ -89,11 +90,57 @@ namespace StudentRegistrationSys.Controllers
                                MajorName = sec.Name
                            }).ToList();
 
-            if (infoHistory != null)
+            if (infoHistory.Count != 0)
             {
                 studentInfo.InfoHistories = infoHistory;
             }
            
+
+            return View(studentInfo);
+        }
+
+        public IActionResult StudentCourseDetails(int id)
+        {
+            StudentInfoReportcs studentInfo = new StudentInfoReportcs();
+            List<CourseDetails> courseDetails = new List<CourseDetails>();
+
+            var curacademic = _context.TblAcademicYear.Where(a => a.Active == true).FirstOrDefault().Id;
+            var cursemester = _context.TblSemester.Where(a => a.Active == true).FirstOrDefault().Id;
+
+            studentInfo = (from stu in _context.TblStudentAccount
+                           join det in _context.TblStudentInfo
+                           on stu.Id equals det.AccountId
+                           where det.Active == true && stu.Id == id
+                           select new StudentInfoReportcs
+                           {
+                               Id = stu.Id,
+                               Name = stu.Name,
+                               Email = stu.Email,
+                               AccountId = stu.AccountId,
+                               Address = det.Address,
+                               DegreeProgram = det.DegreeProgram,
+                               Gender = det.Gender,
+                               Phone = det.Phone
+                           }).FirstOrDefault();
+
+            courseDetails = (from stu in _context.TblStudentAccount
+                             join sc in _context.TblSubjectCourse
+                           on stu.Id equals sc.StudentId
+                           join c in _context.TblCourse
+                           on sc.CourseId equals c.Id                        
+                           where sc.AcademicYearId == curacademic && sc.SemesterId == cursemester && stu.Id == id
+                             select new CourseDetails
+                           {
+                              CourseCode = c.Code,
+                              CourseId = c.Id,
+                              CourseName = c.Name
+                           }).ToList();
+
+            if (courseDetails.Count != 0)
+            {
+                studentInfo.CourseDetails = courseDetails;
+            }
+
 
             return View(studentInfo);
         }
@@ -103,6 +150,30 @@ namespace StudentRegistrationSys.Controllers
         {
             TempData["status"] = scl.Status;
             return RedirectToAction("StudentInfo");
+        }
+
+        public IActionResult ResetPassword(int id)
+        {
+            var acid = _context.TblStudentAccount.Where(a => a.Id == id).FirstOrDefault().AccountId;
+
+            ResetPassword resetPassword = new ResetPassword();
+            resetPassword.StudentId = acid;
+            resetPassword.Password = "";
+            resetPassword.ConfirmPassword = "";
+
+            return View(resetPassword);
+        }
+
+        [HttpPost]
+        public IActionResult SaveResetPassword(ResetPassword resetPassword)
+        {
+            var studentInfo = _context.TblStudentAccount.Where(a => a.AccountId == resetPassword.StudentId).FirstOrDefault();
+
+            studentInfo.Password = resetPassword.Password;
+
+            _context.SaveChanges();
+
+            return Json(new { status = "success", message = "Data Saving Successfully" });
         }
 
         public IActionResult SearchCourse(StudentCourseSearch scl)
@@ -143,6 +214,8 @@ namespace StudentRegistrationSys.Controllers
             academicYearId = academicYearId == 0 ? _context.TblAcademicYear.Where(a => a.Active == true).FirstOrDefault().Id : academicYearId;
             studentCourse.AcademicYearId = academicYearId;
 
+            var cursemester = _context.TblSemester.Where(a => a.Active == true).First().Id;
+
            studentCourseInfos = (from st in _context.TblStudentAccount
                                   join sf in _context.TblStudentInfo
                                   on st.Id equals sf.AccountId
@@ -151,11 +224,13 @@ namespace StudentRegistrationSys.Controllers
                                   where sf.AcademicYearId == academicYearId && st.Active == true
                                   select new StudentCourseInfo
                                   {
+                                      Id = st.Id,
                                       Name = st.Name,
                                       AccountId = st.AccountId,
                                       Email = st.Email,
                                       Description = sf.Description,
                                       IsCourseSelect = sf.IsCourseSelect,
+                                      IsSecondSelect = (bool)sf.IsSecondSelect,
                                       IsRegister = sf.IsRegister,
                                       YearLevelId = (int)sf.YearLevelId,
                                       YearLevelName = y.Name
@@ -173,10 +248,20 @@ namespace StudentRegistrationSys.Controllers
             if (courseSelectId != 0)
             {
                 var temp_c = courseSelectId == 1 ? true : false;
-                studentCourseInfos = studentCourseInfos.Where(a => a.IsCourseSelect == temp_c).ToList();
+
+                if(cursemester == 1)
+                {
+                    studentCourseInfos = studentCourseInfos.Where(a => a.IsCourseSelect == temp_c).ToList();
+                }
+                if (cursemester == 2)
+                {
+                    studentCourseInfos = studentCourseInfos.Where(a => a.IsSecondSelect == temp_c).ToList();
+                }
+
             }
 
              studentCourse.StudentCourseInfos = studentCourseInfos;
+             ViewBag.SemesterId = cursemester;
 
             return View(studentCourse);
         }

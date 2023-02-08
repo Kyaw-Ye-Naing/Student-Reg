@@ -12,6 +12,8 @@ namespace StudentRegistrationSys.Models.ViewModels
         public int NewCourseId { get; set; }
         public string PassCourseName { get; set; }
         public string NewCourseName { get; set; }
+        public string PassCode { get; set; }
+        public string NewCode { get; set; }
         public bool Active { get; set; }
     }
 }

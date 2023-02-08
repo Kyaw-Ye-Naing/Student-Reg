@@ -1,0 +1,135 @@
+﻿@model StudentRegistrationSys.Models.ViewModels.StudentInfoReportcs
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .dataTables_length select {
+        border: 2px solid #7571f9ab;
+    }
+
+    .dataTables_filter input {
+        border: 2px solid #7571f9ab;
+    }
+
+    tbody {
+        color: black;
+    }
+
+    th {
+        color: #fff;
+    }
+</style>
+
+<input type="hidden" value="@ViewBag.Noti" id="hfNoti" />
+
+<div class="card m-2">
+    <div class="card-body">
+        <h1>Student Course Details Report</h1>
+        <div>
+            <a asp-action="StudentCourseInfo">Back to List</a>
+        </div>
+        <hr />
+
+        <div class="basic-form">
+            <form>
+                <div class="row">
+                    <div class="col-12 col-lg-5 col-md-5">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" id="name" readonly/>
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="AccountId" class="control-label"></label>
+                            <input asp-for="AccountId" class="form-control" id="account" readonly/>
+                            <span asp-validation-for="AccountId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input asp-for="Email" class="form-control" id="email" readonly/>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                    <div class="col-12 col-lg-5 col-md-5">
+                        <div class="form-group">
+                            <label asp-for="Address" class="control-label"></label>
+                            <input asp-for="Address" class="form-control" id="address" readonly/>
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label asp-for="Gender" class="control-label"></label>
+                                    <input asp-for="Gender" class="form-control" id="gender" readonly/>
+                                    <span asp-validation-for="Gender" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label asp-for="DegreeProgram" class="control-label"></label>
+                                    <input asp-for="DegreeProgram" class="form-control" id="degree" readonly/>
+                                    <span asp-validation-for="DegreeProgram" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Phone" class="control-label"></label>
+                            <input asp-for="Phone" class="form-control" id="phone" readonly/>
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        @if (Model.CourseDetails != null)
+        {
+            <hr />
+            <h3>Courses List</h3>
+            <table id="myTable" class="table table-sm table-striped table-bordered" style="width:80%">
+                <thead>
+                    <tr class="bg-primary">
+                        <th>
+                            No
+                        </th>
+                        <th>
+                             Course Code
+                        </th>
+                        <th>
+                            Course Name
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < Model.CourseDetails.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                <span>@(i+1)</span>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem.CourseDetails[i].CourseCode)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem.CourseDetails[i].CourseName)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                </tfoot>
+            </table>
+        }
+    </div>
+</div>
+
+
+
+
+
+

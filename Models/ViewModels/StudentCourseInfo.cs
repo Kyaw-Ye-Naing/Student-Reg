@@ -23,6 +23,7 @@ namespace StudentRegistrationSys.Models.ViewModels
         public string Email { get; set; }
         public bool IsRegister { get; set; }
         public bool IsCourseSelect { get; set; }
+        public bool IsSecondSelect { get; set; }
         public string Description { get; set; }
         public int YearLevelId { get; set; }
         public string YearLevelName { get; set; }

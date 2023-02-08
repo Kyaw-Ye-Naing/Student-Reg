@@ -32,7 +32,6 @@ namespace StudentRegistrationSys.Models.Data
         public virtual DbSet<TblStudentAccount> TblStudentAccount { get; set; }
         public virtual DbSet<TblStudentInfo> TblStudentInfo { get; set; }
         public virtual DbSet<TblSubjectCourse> TblSubjectCourse { get; set; }
-        public virtual DbSet<TblTesting1> TblTesting1 { get; set; }
         public virtual DbSet<TblTimeLimit> TblTimeLimit { get; set; }
         public virtual DbSet<TblTimeTable> TblTimeTable { get; set; }
         public virtual DbSet<TblTimeTableDetails> TblTimeTableDetails { get; set; }
@@ -277,25 +276,6 @@ namespace StudentRegistrationSys.Models.Data
                 entity.Property(e => e.Description).HasMaxLength(50);
 
                 entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
-            });
-
-            modelBuilder.Entity<TblTesting1>(entity =>
-            {
-                entity.ToTable("tbl_testing1");
-
-                entity.HasIndex(e => e.Testone)
-                    .HasName("UNQ_Emp_Phone")
-                    .IsUnique();
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.Testone)
-                    .HasColumnName("testone")
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.Testtwo)
-                    .HasColumnName("testtwo")
-                    .HasMaxLength(50);
             });
 
             modelBuilder.Entity<TblTimeLimit>(entity =>

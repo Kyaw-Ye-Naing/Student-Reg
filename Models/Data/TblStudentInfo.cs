@@ -55,5 +55,6 @@ namespace StudentRegistrationSys.Models.Data
         public string Gender { get; set; }
         public bool IsRegister { get; set; }
         public bool IsCourseSelect { get; set; }
+        public bool? IsSecondSelect { get; set; }
     }
 }

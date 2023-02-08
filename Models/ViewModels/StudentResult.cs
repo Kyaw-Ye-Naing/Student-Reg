@@ -25,6 +25,7 @@ namespace StudentRegistrationSys.Models.ViewModels
         public int? ResultDetailsId { get; set; }
         public int? CourseId { get; set; }
         public string CourseName { get; set; }
+        public string CourseCode { get; set; }
         public string Grade { get; set; }
         public string Description { get; set; }
     }

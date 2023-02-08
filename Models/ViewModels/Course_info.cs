@@ -5,6 +5,13 @@ using System.Threading.Tasks;
 
 namespace StudentRegistrationSys.Models.ViewModels
 {
+    public class Course_Master
+    {
+        public int? YearLevelId { get; set; }
+        public int? SemesterId { get; set; }
+        public List<Course_info> course_Infos { get; set; }
+    }
+
     public class Course_info
     {
         public int Id { get; set; }

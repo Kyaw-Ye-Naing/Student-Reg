@@ -55,7 +55,7 @@ namespace StudentRegistrationSys.Common
             using var db = new StudentInfoContext();
             var yearlevel = (from a in db.TblYearLevel
                                  //where a.Active == true
-                             orderby a.Name ascending
+                             orderby a.Id ascending
                              select a).ToList();
 
             if (id != 0)
@@ -94,7 +94,7 @@ namespace StudentRegistrationSys.Common
             using var db = new StudentInfoContext();
             var yearlevel = (from a in db.TblYearLevel
                                  //where a.Active == true
-                             orderby a.Name ascending
+                             orderby a.Id ascending
                              select a).ToList();
 
 
@@ -117,7 +117,6 @@ namespace StudentRegistrationSys.Common
             List<SelectListItem> listItems = new List<SelectListItem>();
             using var db = new StudentInfoContext();
             var tblSemesters = (from a in db.TblSemester
-                                where a.Active == true
                                 orderby a.Name ascending
                                 select a).ToList();
 
@@ -136,6 +135,45 @@ namespace StudentRegistrationSys.Common
             else
             {
                 listItems.Add(new SelectListItem { Text = "Please Select", Value = "0" });
+                foreach (var item in tblSemesters)
+                {
+                    listItems.Add(new SelectListItem
+                    {
+                        Text = item.Name,
+                        Value = item.Id.ToString().Trim(),
+                        Selected = item.Id == id
+                    });
+                }
+            }
+
+
+            return listItems;
+        }
+
+        public static List<SelectListItem> GetSemesterListForReport(int? id)
+        {
+            List<SelectListItem> listItems = new List<SelectListItem>();
+            using var db = new StudentInfoContext();
+            var tblSemesters = (from a in db.TblSemester                              
+                                orderby a.Name ascending
+                                select a).ToList();
+
+            if (id != 0)
+            {
+                listItems.Add(new SelectListItem { Text = "All", Value = "0" });
+                foreach (var item in tblSemesters)
+                {
+                    listItems.Add(new SelectListItem
+                    {
+                        Text = item.Name,
+                        Value = item.Id.ToString().Trim(),
+                        Selected = item.Id == id
+                    });
+                }
+            }
+            else
+            {
+                listItems.Add(new SelectListItem { Text = "All", Value = "0" });
                 foreach (var item in tblSemesters)
                 {
                     listItems.Add(new SelectListItem
@@ -297,6 +335,45 @@ namespace StudentRegistrationSys.Common
                     listItems.Add(new SelectListItem
                     {
                         Text = item.Name,
+                        Value = item.Id.ToString().Trim(),
+                        Selected = item.Id == id
+                    });
+                }
+            }
+
+
+            return listItems;
+        }
+
+        public static List<SelectListItem> GetCourseCodeList(int? id)
+        {
+            List<SelectListItem> listItems = new List<SelectListItem>();
+            using var db = new StudentInfoContext();
+            var tblStudents = (from a in db.TblCourse
+                               where a.Active == true
+                               orderby a.Code ascending
+                               select a).ToList();
+
+            if (id != 0)
+            {
+                foreach (var item in tblStudents)
+                {
+                    listItems.Add(new SelectListItem
+                    {
+                        Text = item.Code,
+                        Value = item.Id.ToString().Trim(),
+                        Selected = item.Id == id
+                    });
+                }
+            }
+            else
+            {
+                listItems.Add(new SelectListItem { Text = "Please Select", Value = "0" });
+                foreach (var item in tblStudents)
+                {
+                    listItems.Add(new SelectListItem
+                    {
+                        Text = item.Code,
                         Value = item.Id.ToString().Trim(),
                         Selected = item.Id == id
                     });

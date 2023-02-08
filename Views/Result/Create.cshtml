@@ -25,7 +25,7 @@
                 <div class="row">
                     <div class="col-12 col-lg-6 col-md-6">
                         <div class="form-group">
-                            <label asp-for="StudentId" class="control-label"></label>
+                            <label asp-for="StudentId" class="control-label">Student Name</label>
                             <select id="student" class="form-control" asp-for="StudentId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetStudentList(0)">
                             </select>
                             <input type="hidden" asp-for="StudentId" />
@@ -64,6 +64,7 @@
                 <table class="table table-bordered" id="student-course">
                     <thead class="bg-primary" style="color:#fff;">
                         <tr>
+                            <td>Course Code</td>
                             <td>Course Name</td>
                             <td>Grade</td>
                             <td>Description</td>
@@ -80,7 +81,7 @@
         </div>
 
         <div class="form-group">
-            <input type="submit" form="myForm" value="Create" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
+            <input type="submit" form="myForm" value="Save" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
         </div>
     </div>
 </div>
@@ -106,7 +107,9 @@
                         for (var i = 0; i < data.rresult.length; i++) {
 
                             var markup = '<tr class="count">' +
-                                '<td><input type = "text" id="coursename' + rowCount + '" name="StudentResultDetails['+ rowCount + '].CourseName" class="form-control" value="' + data.rresult[i].courseName + '"></td>' +
+                                '<td><input type = "text" id="code' + rowCount + '" name="StudentResultDetails[' + rowCount + '].CourseCode" class="form-control" value="' + data.rresult[i].courseCode + '"></td>' +
+                                '<td><input type="hidden" id="courseid' + rowCount + '" name="StudentResultDetails['+ rowCount + '].CourseId" class="form-control" value="' + data.rresult[i].courseId + '">' +
+                                '<input type = "text" id="coursename' + rowCount + '" name="StudentResultDetails['+ rowCount + '].CourseName" class="form-control" value="' + data.rresult[i].courseName + '"></td>' +
                                 '<td><input type = "text" id="grade' + rowCount + '" name="StudentResultDetails[' + rowCount + '].Grade" class="form-control" value="' + data.rresult[i].grade + '"></td>' +
                                 '<td><input type = "text" id="description' + rowCount + '" name="StudentResultDetails[' + rowCount + '].Description" class="form-control" value="' + data.rresult[i].description + '"></td></tr>'
                             console.log("looping", markup);
@@ -178,15 +181,13 @@
                     swal.close();
                     var l = $('#ladda-button').ladda();
                     l.ladda('stop');
-                    document.getElementById("name").value = "";
-                    document.getElementById("code").value = "";
+                    document.getElementById("student").value = "";
                     document.getElementById("year-level").value = "";
                     document.getElementById("semester").value = "";
                     document.getElementById("academic-year").value = "";
-                    document.getElementById("comment").value = "";
                     toastr.success(response.message);
 
-                   // window.location.href = '@Url.Action("Index", "Result")';
+                    window.location.href = '@Url.Action("Index", "Result")';
                 }
                 else {
                    // StopLoading();

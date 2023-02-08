@@ -28,6 +28,9 @@
         height: 20px;
     }
 </style>
+@{
+    var semesterId = ViewBag.semesterId;
+ }
 
 <input type="hidden" value="@ViewBag.Noti" id="hfNoti" />
 
@@ -111,7 +114,9 @@
                     <th>
                         Course Selection
                     </th>
-                    <th></th>
+                    <th>
+                        Action
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -131,18 +136,53 @@
                             @Html.DisplayFor(modelItem => modelItem.StudentCourseInfos[i].YearLevelName)
                         </td>
                         <td>
-                            pending
+                            @if (@Model.StudentCourseInfos[i].IsRegister == false)
+                            {
+
+
+                                <span class="badge badge-warning p-1" style="color:#fff;">pending</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-success p-1" style="color:#fff;">finished</span>
+                            }
                         </td>
                         <td>
-                            finished
+                            @if (semesterId == 1)
+                            {
+                                @if (@Model.StudentCourseInfos[i].IsCourseSelect == false)
+                                {
+
+
+                                    <span class="badge badge-warning p-1" style="color:#fff;">pending</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-success p-1" style="color:#fff;">finished</span>
+                                }
+                            }
+                            @if (semesterId == 2)
+                            {
+                                @if (@Model.StudentCourseInfos[i].IsSecondSelect == false)
+                                {
+
+
+                                    <span class="badge badge-warning p-1" style="color:#fff;">pending</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-success p-1" style="color:#fff;">finished</span>
+                                }
+                            }
+
                         </td>
                         <td>
-                            <a class="btn btn-outline-warning" asp-action="StudentInfoDetails" asp-controller="Report" asp-route-id="@Model.StudentCourseInfos[i].Id" style="padding-top:0;padding-bottom:0;">
-                                <span style="font-size:12px;"><i class="bi bi-pencil-square"></i>&nbsp;Details</span>
-                            </a>
-                            <a class="btn btn-outline-danger" asp-action="Edit" asp-controller="Report" asp-route-id="@Model.StudentCourseInfos[i].Id" style="padding-top:0;padding-bottom:0;">
-                                <span style="font-size:12px;"><i class="bi bi-pencil-square"></i>&nbsp;Lock</span>
-                            </a>
+                            @if (@Model.StudentCourseInfos[i].IsCourseSelect == true)
+                            {
+                                <a class="btn btn-outline-warning" asp-action="StudentCourseDetails" asp-controller="Report" asp-route-id="@Model.StudentCourseInfos[i].Id" style="padding-top:0;padding-bottom:0;">
+                                    <span style="font-size:12px;"><i class="bi bi-pencil-square"></i>&nbsp;View Courses</span>
+                                </a>
+                            }
                         </td>
                     </tr>
                 }

@@ -25,6 +25,9 @@
     <div class="card m-3">
         <div class="card-title">
             <h3>Create TimeTable</h3>
+            <div>
+                <a asp-action="Index" style="font-size:small;margin-left:2rem;">Back to List</a>
+            </div>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="mx-4 mt-2">
                 <div class="row">
@@ -126,7 +129,7 @@
                             {
                                 var periodId = i + 1;
                                 <td>
-                                    <select required id="student" class="form-control" asp-for="TableInfocsDetails[i + (j * 6)].CourseId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetCourseList(0)">
+                                    <select required class="student form-control" asp-for="TableInfocsDetails[i + (j * 6)].CourseId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetCourseCodeList(0)">
                                     </select>
                                     <input type="hidden" asp-for="TableInfocsDetails[i + (j * 6)].CourseId" />
                                     <input type="hidden" asp-for="TableInfocsDetails[i + (j * 6)].PeriodId" value="@periodId" />
@@ -150,6 +153,9 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
+        $('.student').select2({
+            selectOnClose: true
+        });
 
         $("form").submit(function (e) {
             e.preventDefault();

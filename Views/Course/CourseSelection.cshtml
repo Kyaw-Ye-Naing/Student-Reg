@@ -1,109 +1,163 @@
-﻿@{
+﻿@model StudentRegistrationSys.Models.ViewModels.CourseSelectionInfo
+@{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout_stu.cshtml";
 }
-<style>
-    input[type=checkbox] {
-        outline: 2px solid #7571f9;
-    }
+<link href="~/css/CourseSelection.css" rel="stylesheet" />
 
-    span {
-        color: #000;
-    }
+<h1 class="my-2 text-center">Course Selection</h1>
 
-    .parent {
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
-    }
+<form>
+<div class="parent">
+    @if (Model.PrevCourse != null) 
+    { 
+    <div class="prev">
+        <input type="hidden" asp-for="PrevAcademicId" />
+        <input type="hidden" asp-for="PrevSemesterId" />
+        <input type="hidden" asp-for="PrevMajorId" />
+        <input type="hidden" asp-for="PrevYearLevelId" />
+        <div style="display:flex;gap:15px;">
+            <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.PrevAcademic)</h6>
+            <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.PrevYearLevel)</h6>
+            <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.PrevMajor)</h6>
+        </div>
+       
 
-        .parent .prev {
-            width: 100%;
-            height: 200px;
-            background-color: #fff;
-            border-radius: 20px;
-            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-            padding: 20px;
-        }
-
-            .parent .prev .course-gp-par {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: space-between;
-                align-items: center;
-                margin-top: 2rem;
+        <div class="course-gp-par">
+            @for (var i = 0; i < Model.PrevCourse.Count; i++)
+            {
+            <div class="course-gp">
+                <input type="hidden" asp-for="PrevCourse[i].CourseId" />
+                <input type="hidden" asp-for="PrevCourse[i].CourseCode" />
+                <input type="hidden" asp-for="PrevCourse[i].CourseName" />
+                <span>
+                    @Html.DisplayFor(modelItem => modelItem.PrevCourse[i].CourseCode)&nbsp;
+                    @Html.DisplayFor(modelItem => modelItem.PrevCourse[i].CourseName)
+                </span>
+                <input type="checkbox" class="form-check" asp-for="PrevCourse[i].IsSelected"/>
+            </div>
+                @*<div class="course-gp">
+                    <span>(CST-1002) Digital Logic</span>
+                    <input type="checkbox" class="form-check" />
+                </div>
+                <div class="course-gp">
+                    <span>(CST-1002) Math</span>
+                    <input type="checkbox" class="form-check" />
+                </div>
+                <div class="course-gp">
+                    <span>(CST-1002) Data Structure</span>
+                    <input type="checkbox" class="form-check" />
+                </div>
+                <div class="course-gp">
+                    <span>(CST-1002) C# Programming</span>
+                    <input type="checkbox" class="form-check" />
+                </div>
+                <div class="course-gp">
+                    <span>(CST-1002) Data Comm</span>
+                    <input type="checkbox" class="" />
+                </div>*@
             }
+        </div>
 
-                .parent .prev .course-gp-par .course-gp {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 20px;
-                    align-items: center;
-                    justify-content: center;
-                }
-</style>
-<div class="container parent">
-    <h1 class="mt-2">Course Selection</h1>
-    <div class="prev">
-        <h6>First Year Courses</h6>
-        <div class="course-gp-par">
-            <div class="course-gp">
-                <span>English</span>
-                <input type="checkbox" class="form-check" />
-            </div>
-            <div class="course-gp">
-                <span>Digital Logic</span>
-                <input type="checkbox" class="form-check" />
-            </div>
-            <div class="course-gp">
-                <span>Math</span>
-                <input type="checkbox" class="form-check" />
-            </div>
-            <div class="course-gp">
-                <span>Data Structure</span>
-                <input type="checkbox" class="form-check" />
-            </div>
-            <div class="course-gp">
-                <span>C# Programming</span>
-                <input type="checkbox" class="form-check" />
-            </div>
-            <div class="course-gp">
-                <span>Data Comm</span>
-                <input type="checkbox" class="" />
-            </div>
-        </div>
     </div>
-    <div class="prev">
-        <h6>Second Year Courses</h6>
-        <div class="course-gp-par">
-            <div class="course-gp">
-                <span>Algorithm</span>
-                <input type="checkbox" class="form-check" />
-            </div>
-            <div class="course-gp">
-                <span>English</span>
-                <input type="checkbox" class="form-check" />
-            </div>
-            <div class="course-gp">
-                <span>Java Programming</span>
-                <input type="checkbox" class="form-check" />
-            </div>
-            <div class="course-gp">
-                <span>Visual Basic</span>
-                <input type="checkbox" class="form-check" />
-            </div>
-            <div class="course-gp">
-                <span>Networking</span>
-                <input type="checkbox" class="form-check" />
-            </div>
-            <div class="course-gp">
-                <span>Mis</span>
-                <input type="checkbox" class="" />
-            </div>
-        </div>
+    }
+<div class="prev">
+    <input type="hidden" asp-for="NextAcademicId" />
+    <input type="hidden" asp-for="NextMajorId" />
+    <input type="hidden" asp-for="NextSemesterId" />
+    <input type="hidden" asp-for="NextYearLevelId" />
+    <div style="display:flex;gap:15px;">
+        <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.NextAcademic)</h6>
+        <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.NextYearLevel)</h6>
+        <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.NextMajor)</h6>
     </div>
+    <div class="course-gp-par">
+        @for (var i = 0; i < Model.NextCourse.Count; i++)
+        {
+            <div class="course-gp">
+                <input type="hidden" asp-for="NextCourse[i].CourseId" />
+                <input type="hidden" asp-for="NextCourse[i].CourseCode" />
+                <input type="hidden" asp-for="NextCourse[i].CourseName" />
+                <span>
+                    @Html.DisplayFor(modelItem => modelItem.NextCourse[i].CourseCode)&nbsp;
+                    @Html.DisplayFor(modelItem => modelItem.NextCourse[i].CourseName)
+                </span>
+                <input type="checkbox" class="form-check" asp-for="NextCourse[i].IsSelected" />
+            </div>
+            @*<div class="course-gp">
+                    <span>(CST-1002) English</span>
+                    <input type="checkbox" class="form-check" />
+                </div>
+                <div class="course-gp">
+                    <span>(CST-1002) Java Programming</span>
+                    <input type="checkbox" class="form-check" />
+                </div>
+                <div class="course-gp">
+                    <span>(CST-1002) Visual Basic</span>
+                    <input type="checkbox" class="form-check" />
+                </div>
+                <div class="course-gp">
+                    <span>(CST-1002) Networking</span>
+                    <input type="checkbox" class="form-check" />
+                </div>
+                <div class="course-gp">
+                    <span>(CST-1002) Mis</span>
+                    <input type="checkbox" class="" />
+                </div>*@
+        }
+    </div>
+</div>
     <div class="button text-center">
         <input type="submit" value="Save" class="btn btn-primary" />
     </div>
+
 </div>
+    </form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $("form").submit(function (e) {
+            e.preventDefault();
+            var $form = $(this);
+            var data = $form.serialize();
+            var l = $('#ladda-button').ladda();
+            l.ladda('start');
+            swal({
+                title: "Please Wait!",
+                text: "Data Saving Time",
+                type: "success",
+                showCancelButton: false,
+                showConfirmButton: false
+            })
+            setTimeout(function () {
+                CheckLogin(data);
+            }, 1500)
+        });
+
+ function CheckLogin(data) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SaveCourseSelection", "Course")',
+            data: data,
+            success: function (response) {
+            console.log("dfdsfsf", response);
+            if (response.status == "success") {
+            swal.close();
+            var l = $('#ladda-button').ladda();
+            l.ladda('stop');
+
+            window.location.href = '@Url.Action("StudentIndex", "Home")';
+            }
+            else {
+            // StopLoading();
+            swal.close();
+            var l = $('#ladda-button').ladda();
+            l.ladda('stop');
+            toastr.error(response.message);
+            }
+        }
+    })
+ }
+    </script>
+}

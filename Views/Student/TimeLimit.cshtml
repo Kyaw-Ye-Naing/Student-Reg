@@ -1,0 +1,130 @@
+﻿@model StudentRegistrationSys.Models.Data.TblTimeLimit
+@using StudentRegistrationSys.Common
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    label {
+        color: black;
+    }
+</style>
+<div class="card m-3">
+    <div class="card-body">
+        <h1>Add Academic Year Level</h1>
+
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+        <hr />
+
+        <div class="row">
+            <div class="col-12 col-lg-5 col-md-5">
+                <div class="basic-form">
+                    <form>
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="AcademicYearId" class="control-label">AcademicYear</label>
+                            <select id="academic-year" class="form-control" asp-for="AcademicYearId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetAcademicYearList(0)">
+                            </select>
+                            <input type="hidden" asp-for="AcademicYearId" />
+
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SemesterId" class="control-label">Semester</label>
+                            <select id="semester" class="form-control" asp-for="SemesterId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetSemesterList(0)">
+                            </select>
+                            <input type="hidden" asp-for="SemesterId" />
+
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="StartDate" class="control-label"></label>
+                            <input asp-for="StartDate" class="form-control" id="StartDate" type="date" />
+                            <span asp-validation-for="StartDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EndDate" class="control-label"></label>
+                            <input asp-for="EndDate" class="form-control" id="EndDate" type="date" />
+                            <span asp-validation-for="EndDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Description" class="control-label"></label>
+                            <textarea asp-for="Description" class="form-control h-150px" rows="6" id="comment"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="form-inline">
+                            <div class="form-check mb-3 mr-2">
+                                <input type="radio" class="form-check-input radio-input" asp-for="Type" value="reg">Register
+                            </div>
+                            <div class="form-check mb-3">
+                                <input type="radio" class="form-check-input radio-input" asp-for="Type" value="cour">Course Select
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check mb-3">
+                                <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input" asp-for="Active" checked>Active
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+    $("form").submit(function (e) {
+        e.preventDefault();
+        var $form = $(this);
+        var data = $form.serialize();
+        var l = $('#ladda-button').ladda();
+        l.ladda('start');
+        swal({
+            title: "Please Wait!",
+            text: "Data Saving Time",
+            type: "success",
+            showCancelButton: false,
+            showConfirmButton: false
+        })
+        setTimeout(function () {
+            CheckLogin(data);
+        },1500)
+    });
+
+    function CheckLogin(data) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SaveTimeLimit", "Student")',
+            data: data,
+            success: function (response) {
+                console.log("dfdsfsf", response);
+                if (response.status == "success") {
+                    swal.close();
+                    var l = $('#ladda-button').ladda();
+                    l.ladda('stop');
+                  
+                    toastr.success(response.message);
+
+                    window.location.href = '@Url.Action("TimeLimitIndex", "Student")';
+                }
+                else {
+                   // StopLoading();
+                    swal.close();
+                    var l = $('#ladda-button').ladda();
+                    l.ladda('stop');
+                    toastr.error(response.message);
+                }
+            }
+        })
+    }
+    </script>
+}
+
+

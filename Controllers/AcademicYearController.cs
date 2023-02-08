@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using StudentRegistrationSys.Models.Data;
 using System;
 using System.Collections.Generic;
@@ -65,6 +66,11 @@ namespace StudentRegistrationSys.Controllers
         {
             try
             {
+                if (academicYear.Active == true)
+                {
+                    _context.Database.ExecuteSqlInterpolated($"Update tbl_AcademicYear Set Active = 0;");
+                }
+
                 TblAcademicYear tblAcademic = _context.TblAcademicYear.Find(academicYear.Id);
 
                 tblAcademic.Name = academicYear.Name;

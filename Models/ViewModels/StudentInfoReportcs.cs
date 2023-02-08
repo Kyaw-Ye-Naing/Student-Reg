@@ -20,6 +20,7 @@ namespace StudentRegistrationSys.Models.ViewModels
         public string Status { get; set; }
         public bool Active { get; set; }
         public List<StudentInfoHistory> InfoHistories { get; set; }
+        public List<CourseDetails> CourseDetails { get; set; }
     }
 
     public class StudentInfoHistory
@@ -31,6 +32,15 @@ namespace StudentRegistrationSys.Models.ViewModels
         public int MajorId { get; set; }
         public string MajorName { get; set; }
     }
+
+    public class CourseDetails
+    {
+        public int CourseId { get; set; }
+        public string CourseName { get; set; }
+        public string CourseCode { get; set; }
+    }
+
+
 
     public class StudentInfoReportView
     {

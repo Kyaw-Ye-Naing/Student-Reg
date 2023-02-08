@@ -25,6 +25,9 @@
     <div class="card m-3">
         <div class="card-title">
             <h3>Edit TimeTable</h3>
+            <div>
+                <a asp-action="Index" style="font-size:small;margin-left:2rem;">Back to List</a>
+            </div>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="mx-4 mt-2">
@@ -138,7 +141,7 @@
                             {
 
                                 <td>
-                                    <select id="student" class="form-control" asp-for="TableInfocsDetails[i + (j * 6)].CourseId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetCourseList(Model.TableInfocsDetails[i + (j * 6)].CourseId)">
+                                    <select id="student" class="form-control" asp-for="TableInfocsDetails[i + (j * 6)].CourseId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetCourseCodeList(Model.TableInfocsDetails[i + (j * 6)].CourseId)">
                                     </select>
                                     <input type="hidden" asp-for="TableInfocsDetails[i + (j * 6)].CourseId" />
                                     <input type="hidden" asp-for="TableInfocsDetails[i + (j * 6)].Id" />
@@ -155,7 +158,7 @@
                 </tfoot>
             </table>
             <div class="form-group d-flex justify-content-end">
-                <input type="submit" value="Create" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
+                <input type="submit" value="Save" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
             </div>
         </div>
     </div>

@@ -34,7 +34,7 @@ namespace StudentRegistrationSys
 
             services.AddDistributedMemoryCache();
             services.AddSession(options => {
-                options.IdleTimeout = TimeSpan.FromMinutes(60);//You can set Time   
+                options.IdleTimeout = TimeSpan.FromMinutes(120);//You can set Time   
             });
             services.AddMvc();
         }

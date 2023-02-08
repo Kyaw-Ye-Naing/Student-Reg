@@ -27,13 +27,13 @@ namespace StudentRegistrationSys.Controllers
         {
             return View();
         }
-     
+
         // POST: LogInController/Create
         public ActionResult CheckIsAuthenticated(LogIn logIn)
         {
-           //  try
-           // {
-               // var pp = SaveTest();
+            try
+            {
+
 
                 //JsonResponse result = new JsonResponse();
                 var tolower = logIn.AccountName.ToLower();
@@ -50,7 +50,7 @@ namespace StudentRegistrationSys.Controllers
                         return Json(new { status = "fail", message = "Account name or password is incorrect!" });
                     }
 
-                type = "admin";
+                    type = "admin";
 
                     HttpContext.Session.SetString(SessionName, result.Name);
                     HttpContext.Session.SetInt32(SessionId, result.Id);
@@ -64,43 +64,20 @@ namespace StudentRegistrationSys.Controllers
                         return Json(new { status = "fail", message = "Account name or password is incorrect!" });
                     }
 
-                type = "student";
+                    type = "student";
 
-                HttpContext.Session.SetString(SessionName, result.Name);
+                    HttpContext.Session.SetString(SessionName, result.Name);
                     HttpContext.Session.SetInt32(SessionId, result.Id);
                     HttpContext.Session.SetString(SessionAccount, result.AccountId);
                 }
 
                 return Json(new { status = "success", message = type });
-           //  }
-         //   catch
-          //  {
-          //      return View();
-          //  }
+            }
+            catch
+            {
+                return View();
+            }
         }
 
-        public bool SaveTest()
-        {
-           // try
-           // {
-                TblTesting1 tblTesting1 = new TblTesting1()
-                {
-                    Testone = "aa",
-                    Testtwo = "bb"
-                };
-                _context.TblTesting1.Add(tblTesting1);
-                _context.SaveChanges();
-
-                report report = new report();
-                report.SaveTest("a", "b");
-
-                return true;
-          //  }
-          //  catch
-          //  {
-           ////     return false;
-          //  }
-          
-        }
     }
 }

@@ -25,13 +25,13 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
                             <label asp-for="PassCourseId" class="control-label">Pass Course</label>
-                            <select id="pcourse" class="form-control" asp-for="PassCourseId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetCourseList(0)">
+                            <select id="pcourse" class="form-control" asp-for="PassCourseId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetCourseCodeList(0)">
                             </select>
                             <input type="hidden" asp-for="PassCourseId" />
                         </div>
                         <div class="form-group">
-                            <label asp-for="NewCourseId" class="control-label">Edit Course</label>
-                            <select id="newcourse" class="form-control" asp-for="NewCourseId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetCourseList(0)">
+                            <label asp-for="NewCourseId" class="control-label">New Course</label>
+                            <select id="newcourse" class="form-control" asp-for="NewCourseId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetCourseCodeList(0)">
                             </select>
                             <input type="hidden" asp-for="NewCourseId" />
                         </div>

@@ -43,24 +43,34 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Description)
                     </th>
+                    <th>
+                        Status
+                    </th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Name)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Description)
-                        </td>
-                        <td>
-                            <a class="btn btn-outline-warning"  asp-action="Edit" asp-controller="Semester" asp-route-id="@item.Id" style="padding-top:0;padding-bottom:0;">
-                            <span style="font-size:12px;"><i class="bi bi-pencil-square"></i>&nbsp;Manage</span></a>
-                        </td>
-                    </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @if (item.Active == true)
+                        {
+                            <span>Active</span>
+                        }
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-warning" asp-action="Edit" asp-controller="Semester" asp-route-id="@item.Id" style="padding-top:0;padding-bottom:0;">
+                            <span style="font-size:12px;"><i class="bi bi-pencil-square"></i>&nbsp;Manage</span>
+                        </a>
+                    </td>
+                </tr>
                 }
             </tbody>
             <tfoot>

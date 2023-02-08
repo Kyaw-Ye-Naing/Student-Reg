@@ -27,7 +27,9 @@ namespace StudentRegistrationSys.Controllers
             foreach (var item in result)
             {
                 var newcoruse = courseLists.Where(a => a.Id == item.NewCourseId).First().Name;
+                var newcorusecode = courseLists.Where(a => a.Id == item.NewCourseId).First().Code;
                 var passcoruse = courseLists.Where(a => a.Id == item.PassCourseId).First().Name;
+                var passcorusecode = courseLists.Where(a => a.Id == item.PassCourseId).First().Code;
 
                 prerequisities.Add(new Prerequisities
                 {
@@ -35,7 +37,9 @@ namespace StudentRegistrationSys.Controllers
                     PassCourseId = (int)item.PassCourseId,
                     NewCourseName = newcoruse,
                     PassCourseName = passcoruse,
-                    Id = item.Id
+                    Id = item.Id,
+                    PassCode = passcorusecode,
+                    NewCode = newcorusecode
                 });
             }
 

@@ -80,6 +80,7 @@ namespace StudentRegistrationSys.Controllers
                                       {
                                           CourseId = (int)td.CourseId,
                                           PeriodId = td.PeriodId,
+                                          CourseCode = c.Code,
                                           Day = td.Day,
                                           Id = td.Id,
                                           CourseName = c.Name

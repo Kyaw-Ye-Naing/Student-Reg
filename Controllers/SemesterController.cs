@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using StudentRegistrationSys.Models.Data;
 using StudentRegistrationSys.Models.ViewModels;
 
@@ -20,7 +21,7 @@ namespace StudentRegistrationSys.Controllers
         // GET: Semester
         public ActionResult Index()
         {
-            var result = _context.TblSemester.Where(a=>a.Active == true).ToList();
+            var result = _context.TblSemester.ToList();
             return View(result);
         }
 
@@ -33,7 +34,7 @@ namespace StudentRegistrationSys.Controllers
         // POST: Semester/Create
         public ActionResult SaveSemester(TblSemester semester)
         {
-            var isExist = _context.TblSemester.Any(a => a.Active == true && a.Name == semester.Name);
+            var isExist = _context.TblSemester.Any(a=>a.Name == semester.Name);
 
             if (!isExist) {
                 TblSemester tblSemester = new TblSemester
@@ -66,6 +67,10 @@ namespace StudentRegistrationSys.Controllers
                 var isExist = _context.TblSemester.Any(a => a.Active == true && a.Name == semester.Name);
 
                 if (!isExist) {
+                if (semester.Active == true)
+                {
+                    _context.TblSemester.FromSqlInterpolated($"Update tbl_Semester Set active = 0;");
+                }
                     TblSemester tblSemester = _context.TblSemester.Find(semester.Id);
 
                     tblSemester.Name = semester.Name;

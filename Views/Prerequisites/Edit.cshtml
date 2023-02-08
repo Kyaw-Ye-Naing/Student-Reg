@@ -26,13 +26,13 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
                             <label asp-for="PassCourseId" class="control-label">Pass Course</label>
-                            <select id="pcourse" class="form-control" asp-for="PassCourseId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetCourseList(Model.PassCourseId)">
+                            <select id="pcourse" class="form-control" asp-for="PassCourseId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetCourseCodeList(Model.PassCourseId)">
                             </select>
                             <input type="hidden" asp-for="PassCourseId" />
                         </div>
                         <div class="form-group">
                             <label asp-for="NewCourseId" class="control-label">New Course</label>
-                            <select id="newcourse" class="form-control" asp-for="NewCourseId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetCourseList(Model.NewCourseId)">
+                            <select id="newcourse" class="form-control" asp-for="NewCourseId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetCourseCodeList(Model.NewCourseId)">
                             </select>
                             <input type="hidden" asp-for="NewCourseId" />
                         </div>
@@ -44,7 +44,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <input type="submit" value="Create" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
+                            <input type="submit" value="Save" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
                         </div>
                     </form>
                 </div>

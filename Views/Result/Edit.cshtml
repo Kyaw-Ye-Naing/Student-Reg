@@ -12,7 +12,7 @@
 </style>
 <div class="card m-3">
     <div class="card-body">
-        <h1>Add Student Result</h1>
+        <h1>Edit Student Result</h1>
 
         <div>
             <a asp-action="Index">Back to List</a>
@@ -81,7 +81,7 @@
         </table>
 
         <div class="form-group">
-            <input type="submit" value="Create" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
+            <input type="submit" value="Save" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
         </div>
 
     </div>
@@ -120,12 +120,7 @@
                     swal.close();
                     var l = $('#ladda-button').ladda();
                     l.ladda('stop');
-                    document.getElementById("name").value = "";
-                    document.getElementById("code").value = "";
-                    document.getElementById("year-level").value = "";
-                    document.getElementById("semester").value = "";
-                    document.getElementById("academic-year").value = "";
-                    document.getElementById("comment").value = "";
+                   
                     toastr.success(response.message);
 
                     window.location.href = '@Url.Action("Index", "Result")';

@@ -33,6 +33,7 @@ namespace StudentRegistrationSys.Controllers
                           on r.StudentId equals st.Id
                           select new StudentResult
                           {
+                              Id = r.Id,
                               AcademicYearId = r.AcademicYearId,
                               AcademicYearName = ac.Name,
                               YearLevelId = r.YearLevelId,
@@ -61,7 +62,7 @@ namespace StudentRegistrationSys.Controllers
         // POST: Semester/Create
         public ActionResult SaveResult(StudentResult result)
         {
-            var d_count = 0;
+            //var d_count = 0;
             TblResult tblResult = new TblResult
             {
                 AcademicYearId = result.AcademicYearId,
@@ -69,21 +70,22 @@ namespace StudentRegistrationSys.Controllers
                 SemesterId = result.SemesterId,
                 Status = result.Status,
                 StudentId = result.StudentId,
-                NextYearId = result.SemesterId == 1 ? 0 : result.YearLevelId + 1
+                NextYearId = 0
             };
             _context.TblResult.Add(tblResult);
             _context.SaveChanges();
 
             foreach (var item in result.StudentResultDetails)
             {
-                if (item.Grade.ToLower() == "d")
-                {
-                    d_count += 1;
-                }
+                //if (item.Grade.ToLower() == "d")
+                //{
+                //    d_count += 1;
+                //}
                 TblResultDetails tblResultDetails = new TblResultDetails
                 {
                     CourseId = item.CourseId,
-                    Grade = item.Grade
+                    Grade = item.Grade.ToUpper(),
+                    ResultId = tblResult.Id
                 };
                 //tblResultDetails.d = result.SemesterId;
 
@@ -94,18 +96,21 @@ namespace StudentRegistrationSys.Controllers
             //--second semester
             if (result.SemesterId == 2)
             {
-                TblStudentInfo inforesult = _context.TblStudentInfo.Where(a => a.Active == true && a.AccountId == result.Id).FirstOrDefault();
+                TblStudentInfo inforesult = _context.TblStudentInfo.Where(a => a.Active == true && a.AccountId == result.StudentId).FirstOrDefault();
                 inforesult.Active = false;
                 _context.SaveChanges();
 
-                var acyearid = _context.TblAcademicYear.Where(a => a.Active == true).FirstOrDefault().Id;
+               // var acyearid = _context.TblAcademicYear.Where(a => a.Active == true).FirstOrDefault().Id;
 
                 TblStudentInfo tblStudentInfo = new TblStudentInfo()
                 {
-                    AcademicYearId = acyearid,
+                    AcademicYearId = result.AcademicYearId + 1,
                     Active = true,
                     AccountId = result.StudentId,
-                    YearLevelId = d_count > 3 ? result.YearLevelId : result.YearLevelId + 1
+                    IsCourseSelect = false,
+                    IsRegister =false,
+                    IsSecondSelect =false,
+                    YearLevelId = result.YearLevelId + 1
                 };
                 _context.TblStudentInfo.Add(tblStudentInfo);
                 _context.SaveChanges();
@@ -170,14 +175,22 @@ namespace StudentRegistrationSys.Controllers
             StudentResult studentResult = new StudentResult();
             List<StudentResultDetails> resultDetails = new List<StudentResultDetails>();
 
-            var result = _context.TblSubjectCourse.Where(a => a.StudentId == id).ToList();
+            var cursemesterId = _context.TblSemester.Where(a => a.Active == true).FirstOrDefault().Id;
+            var curacademicyearId = _context.TblAcademicYear.Where(a => a.Active == true).FirstOrDefault().Id;
+
+            var result = _context.TblSubjectCourse.Where(a => a.StudentId == id && a.SemesterId == cursemesterId && 
+                                    a.AcademicYearId == curacademicyearId).ToList();
+
+            var courseList = _context.TblCourse.ToList();
 
             foreach (var item in result)
             {
-                var coursename = _context.TblCourse.Where(a => a.Id == item.CourseId).FirstOrDefault().Name;
+                var coursename = courseList.Where(a => a.Id == item.CourseId).FirstOrDefault().Name;
+                var coursecode = courseList.Where(a => a.Id == item.CourseId).FirstOrDefault().Code;
                 resultDetails.Add(new StudentResultDetails
                 {
                     CourseId = item.CourseId,
+                    CourseCode = coursecode,
                     CourseName = coursename,
                     Grade = "",
                     Description = "",
@@ -194,7 +207,6 @@ namespace StudentRegistrationSys.Controllers
         // POST: Semester/Edit/5
         public ActionResult EditResult(StudentResult result)
         {
-                var d_count = 0;
                 TblResult tblResult = _context.TblResult.Find(result.Id);
 
                 tblResult.AcademicYearId = result.AcademicYearId;
@@ -207,12 +219,7 @@ namespace StudentRegistrationSys.Controllers
                 _context.SaveChanges();
 
                 foreach (var item in result.StudentResultDetails)
-                {
-                    if (item.Grade.ToLower() == "d")
-                    {
-                        d_count += 1;
-                    }
-
+                {                 
                     TblResultDetails tblResultDetails = _context.TblResultDetails.Find(item.ResultDetailsId);
 
                     tblResultDetails.CourseId = item.CourseId;
@@ -229,10 +236,10 @@ namespace StudentRegistrationSys.Controllers
 
                     TblStudentInfo tblStudentInfo = _context.TblStudentInfo.Where(a => a.Active == true).FirstOrDefault();
 
-                    tblStudentInfo.AcademicYearId = acyearid;
+                    tblStudentInfo.AcademicYearId = result.AcademicYearId + 1;
                     tblStudentInfo.Active = true;
                     tblStudentInfo.AccountId = result.StudentId;
-                    tblStudentInfo.YearLevelId = d_count > 3 ? result.YearLevelId : result.YearLevelId + 1;
+                    tblStudentInfo.YearLevelId = result.YearLevelId + 1;
                     
                     _context.SaveChanges();
                 }
@@ -254,7 +261,7 @@ namespace StudentRegistrationSys.Controllers
                                            on re.StudentId equals st.Id
                                            join s in _context.TblSemester
                                            on re.SemesterId equals s.Id
-                                           where re.StudentId == id
+                                           where re.Id == id
                                            select new StudentResult
                                            {
                                                Id = re.Id,
@@ -336,7 +343,28 @@ namespace StudentRegistrationSys.Controllers
                                 _context.TblResultDetails.Add(tblResultDetails);
                                 _context.SaveChanges();
                             } 
-                        }    
+                        }
+
+                        if (semesterid == 2)//--second semester
+                        {
+                            TblStudentInfo inforesult = _context.TblStudentInfo.Where(a => a.Active == true && a.AccountId == sid).FirstOrDefault();
+                            inforesult.Active = false;
+                            _context.SaveChanges();
+
+                            TblStudentInfo tblStudentInfo = new TblStudentInfo()
+                            {
+                                AcademicYearId = acyearid + 1,
+                                Active = true,
+                                YearLevelId = Convert.ToInt32(worksheet.Cells[row, 2].Value.ToString().Trim())+1,
+                                SemesterId = 1,
+                                AccountId = sid,
+                                IsRegister = false,
+                                IsCourseSelect = false,
+                                IsSecondSelect = false
+                            };
+                            _context.TblStudentInfo.Add(tblStudentInfo);
+                            _context.SaveChanges();
+                        }
                     }
                 }
             }
