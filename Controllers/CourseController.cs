@@ -398,11 +398,16 @@ namespace StudentRegistrationSys.Controllers
             var accid = HttpContext.Session.GetInt32(SessionId);        
             var prerequisiteList = _context.TblPrerequisities.ToList();
             var courseList = _context.TblCourse.ToList();
+            var prevCount = 0;
+            List<CourseSelectionDetails> prevActivelist = new List<CourseSelectionDetails>();
 
-            var prevActivelist = courseSelectionInfo.PrevCourse.Where(a => a.IsSelected == true).ToList();
-            var nextActivelist = courseSelectionInfo.NextCourse.Where(a => a.IsSelected == true).ToList();
-
-            var prevCount = prevActivelist.Count();
+            if (courseSelectionInfo.PrevCourse != null)
+            {
+                 prevActivelist = courseSelectionInfo.PrevCourse.Where(a => a.IsSelected == true).ToList();
+                 prevCount = prevActivelist.Count();
+            }
+           
+            var nextActivelist = courseSelectionInfo.NextCourse.Where(a => a.IsSelected == true).ToList(); 
             var nextCount = nextActivelist.Count();
 
             //-----------------check course count total
