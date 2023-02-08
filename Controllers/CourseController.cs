@@ -671,7 +671,7 @@ namespace StudentRegistrationSys.Controllers
                                        td.Id
                                    }).ToList();
 
-                    foreach (var item3 in courseSelectionInfo.PrevCourse)
+                    foreach (var item3 in prevActivelist)
                     {
                         var temp1 = result1.Where(a => a.CourseId == item3.CourseId).ToList();
 
@@ -691,7 +691,7 @@ namespace StudentRegistrationSys.Controllers
 
                     prevTimeTableDetails = prevTimeTableDetails.OrderBy(a => a.Id).ToList();
 
-                    foreach (var item6 in courseSelectionInfo.NextCourse)
+                    foreach (var item6 in nextActivelist)
                     {
                         var temp2 = result2.Where(a => a.CourseId == item6.CourseId).ToList();
 
