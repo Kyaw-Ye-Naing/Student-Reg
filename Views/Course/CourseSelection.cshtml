@@ -16,22 +16,28 @@
             <input type="hidden" asp-for="NextYearLevelId" />
             <div style="display:flex;gap:15px;">
                 <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.NextAcademic)</h6>
+                <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.NextSemester)</h6>
                 <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.NextYearLevel)</h6>
                 <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.NextMajor)</h6>
             </div>
             <div class="course-gp-par">
                 @for (var i = 0; i < Model.NextCourse.Count; i++)
                 {
-                    <div class="course-gp">
-                        <input type="hidden" asp-for="NextCourse[i].CourseId" />
-                        <input type="hidden" asp-for="NextCourse[i].CourseCode" />
-                        <input type="hidden" asp-for="NextCourse[i].CourseName" />
-                        <span>
-                            @Html.DisplayFor(modelItem => modelItem.NextCourse[i].CourseCode)&nbsp;
-                            @Html.DisplayFor(modelItem => modelItem.NextCourse[i].CourseName)
-                        </span>
-                        <input type="checkbox" class="form-check" asp-for="NextCourse[i].IsSelected" />
-                    </div>
+                <div class="course-gp">
+                    <input type="hidden" asp-for="NextCourse[i].CourseId" />
+                    <input type="hidden" asp-for="NextCourse[i].CourseCode" />
+                    <input type="hidden" asp-for="NextCourse[i].CourseName" />
+                    <input type="hidden" asp-for="NextCourse[i].Description" />
+                    <span>
+                        @Html.DisplayFor(modelItem => modelItem.NextCourse[i].CourseCode)&nbsp;
+                        @Html.DisplayFor(modelItem => modelItem.NextCourse[i].CourseName)
+                        @if (@Model.NextCourse[i].Description == "elective")
+                        {
+                            <span>(elective)</span>
+                        }
+                    </span>
+                    <input type="checkbox" class="form-check" asp-for="NextCourse[i].IsSelected" />
+                </div>
                     @*<div class="course-gp">
                         <span>(CST-1002) English</span>
                         <input type="checkbox" class="form-check" />
@@ -64,6 +70,7 @@
                 <input type="hidden" asp-for="PrevYearLevelId" />
                 <div style="display:flex;gap:15px;">
                     <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.PrevAcademic)</h6>
+                    <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.PrevSemester)</h6>
                     <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.PrevYearLevel)</h6>
                     <h6 style="font-weight:bold;"> @Html.DisplayFor(model => model.PrevMajor)</h6>
                 </div>

@@ -33,5 +33,6 @@ namespace StudentRegistrationSys.Models.ViewModels
         public string CourseName { get; set; }
         public string CourseCode { get; set; }
         public bool IsSelected { get; set; }
+        public string Description { get; set; }
     }
 }

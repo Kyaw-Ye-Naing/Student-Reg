@@ -71,48 +71,85 @@
             </div>
             <div class="timetable">
                 <h5>TimeTable</h5>
-                <table class="table mt-1">
-                    <thead>
-                        <tr class="table-primary">
-                            <th scope="col">#</th>
-                            <th scope="col">First</th>
-                            <th scope="col">Last</th>
-                            <th scope="col">Handle</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>mdo</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>fat</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>Larry</td>
-                            <td>the Bird</td>
-                            <td>twitter</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>Larry</td>
-                            <td>the Bird</td>
-                            <td>twitter</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>Larry</td>
-                            <td>the Bird</td>
-                            <td>twitter</td>
-                        </tr>
-                    </tbody>
-                </table>
+                @if (Model.TimeTableInfocsDetails.Count != 0)
+                {
+                    <table id="myTable" class="table table-striped table-bordered" style="width:100%;font-size:10px;margin-top:1rem;">
+                        <thead>
+                            <tr class="bg-primary" style="color:#fff;">
+                                <th width="70">
+                                </th>
+                                <th>
+                                    Period 1
+                                </th>
+                                <th>
+                                    Period 2
+                                </th>
+                                <th>
+                                    Period 3
+                                </th>
+                                <th>
+                                    Period 4
+                                </th>
+                                <th>
+                                    Period 5
+                                </th>
+                                <th>
+                                    Period 6
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (var j = 0; j < 5; j++)
+                            {
+
+                                var temp_day = "";
+                                switch (j)
+                                {
+                                    case 0:
+                                        temp_day = "Mon";
+                                        break;
+                                    case 1:
+                                        temp_day = "Tue";
+                                        break;
+                                    case 2:
+                                        temp_day = "Wed";
+                                        break;
+                                    case 3:
+                                        temp_day = "Thurs";
+                                        break;
+                                    case 4:
+                                        temp_day = "Fri";
+                                        break;
+                                    default:
+                                        // code block
+                                        break;
+                                }
+
+                                <tr>
+                                    <td style="background-color: #7571f9b5;">
+                                        <span style="color:#fff;">@temp_day</span>
+                                    </td>
+
+                                    @for (var i = 0; i < 6; i++)
+                                    {
+
+                                        <td>
+                                            <span>@Model.TimeTableInfocsDetails[i + (j * 6)].CourseCode</span>
+                                        </td>
+
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+                    </table>
+                }
+                else
+                {
+                    <span style="margin-top:6rem;font-size:2rem;display:flex;justify-content:center;">You are not registered yet!</span>
+                }
+
             </div>
 
         </div>

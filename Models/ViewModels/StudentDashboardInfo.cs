@@ -10,6 +10,7 @@ namespace StudentRegistrationSys.Models.ViewModels
         public List<CourseDashboard> CourseDashboards { get; set; }
         public ProfileDashboard ProfileDashboards { get; set; }
         public List<ResultDashboard> ResultDashboards { get; set; }
+        public List<TimeTableInfocsDetails> TimeTableInfocsDetails { get; set; }
     }
 
     public class CourseDashboard

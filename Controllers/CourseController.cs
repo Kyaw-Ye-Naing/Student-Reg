@@ -381,7 +381,8 @@ namespace StudentRegistrationSys.Controllers
                         IsSelected = false,
                         CourseCode = item.Code,
                         CourseId = item.Id,
-                        CourseName = item.Name
+                        CourseName = item.Name,
+                        Description = item.Description
                     });
                 }
 
@@ -441,7 +442,12 @@ namespace StudentRegistrationSys.Controllers
 
             var getcurrentAcademic = _context.TblAcademicYear.Where(a => a.Active == true).FirstOrDefault().Id;
             var getcurrentSemester = _context.TblSemester.Where(a => a.Active == true).FirstOrDefault().Id;
-           
+
+            var elective = nextActivelist.Where(a => a.IsSelected == true && a.Description == "elective").ToList();
+            if (elective != null && elective.Count == 2)
+            {
+                return Json(new { status = "fail", message = "You cannot choose two elective course!" });
+            }
 
             if (courseSelectionInfo.NextYearLevelId != 1)//---contain D
             {
@@ -506,7 +512,7 @@ namespace StudentRegistrationSys.Controllers
                                     });
                                 }
                             }
-                            if (item.CourseCode == "CST-203" + t)
+                            if (item.CourseCode == "CST-203" + t || item.CourseCode == "CST-2112")
                             {
                                 var isExist = prevActivelist.Any(a => a.IsSelected == true && a.CourseCode == "CST-101" + t);
                                 if (isExist)
@@ -751,6 +757,28 @@ namespace StudentRegistrationSys.Controllers
                     _context.TblSubjectCourse.Add(tblSubjectCourse);
                     _context.SaveChanges();
                 }    
+            }
+
+            foreach (var item99 in courseSelectionInfo.PrevCourse)
+            {
+                if (item99.IsSelected == true)
+                {
+                    TblSubjectCourse tblSubjectCourse = new TblSubjectCourse()
+                    {
+                        StudentId = accid,
+                        AcademicYearId = courseSelectionInfo.NextAcademicId,
+                        Active = true,
+                        SemesterId = courseSelectionInfo.NextSemesterId,
+                        SectionId = courseSelectionInfo.NextMajorId,
+                        Code = item99.CourseCode,
+                        CourseId = item99.CourseId,
+                        CreatedDate = DateTime.Now,
+                        YearLevelId = courseSelectionInfo.NextYearLevelId
+                    };
+
+                    _context.TblSubjectCourse.Add(tblSubjectCourse);
+                    _context.SaveChanges();
+                }
             }
 
             var acinfo = _context.TblStudentInfo.Where(a => a.AccountId == accid && a.Active == true).FirstOrDefault();

@@ -33,6 +33,62 @@ namespace StudentRegistrationSys.Controllers
             ViewBag.acc = HttpContext.Session.GetInt32(SessionAccount);
             ViewBag.accid = HttpContext.Session.GetInt32(SessionId);
 
+            var currentAcademicId = _context.TblAcademicYear.Where(a => a.Active == true).FirstOrDefault().Id;
+            var currentSemesterId = _context.TblSemester.Where(a => a.Active == true).FirstOrDefault().Id;
+
+            var firstyearcount = _context.TblStudentInfo.Where(a => a.Active == true && a.AcademicYearId == currentAcademicId &&
+                                a.YearLevelId == 1).Count();
+
+            var secondyearcount = _context.TblStudentInfo.Where(a => a.Active == true && a.AcademicYearId == currentAcademicId &&
+                                a.YearLevelId == 2).Count();
+
+            var thirdyearcount = _context.TblStudentInfo.Where(a => a.Active == true && a.AcademicYearId == currentAcademicId &&
+                                a.YearLevelId == 3).Count();
+
+            var fourthyearcount = _context.TblStudentInfo.Where(a => a.Active == true && a.AcademicYearId == currentAcademicId &&
+                                a.YearLevelId == 4).Count();
+
+            var finalyearcount = _context.TblStudentInfo.Where(a => a.Active == true && a.AcademicYearId == currentAcademicId &&
+                                a.YearLevelId == 5).Count();
+
+            int[] student = new int[5];
+            student[0] = firstyearcount;
+            student[1] = secondyearcount;
+            student[2] = thirdyearcount;
+            student[3] = fourthyearcount;
+            student[4] = finalyearcount;
+
+            ViewBag.pieData = student;
+
+            var tempAcademicId = currentSemesterId == 1 ? currentAcademicId - 1 : currentAcademicId;
+            var tempSemesterId = currentSemesterId == 1 ? 2 : 1;
+
+            var faillist = (from r in _context.TblResult
+                            join rd in _context.TblResultDetails
+                            on r.Id equals rd.ResultId
+                            where r.AcademicYearId == tempAcademicId && r.SemesterId == tempSemesterId && (rd.Grade == "D" || rd.Grade == "E")
+                            select new
+                            {
+                                Id = r.Id,
+                                YearId = r.YearLevelId,
+                                DetailsId = rd.Id,
+                                Grade = rd.Grade
+                            }
+                           ).ToList();
+
+            var passlist = (from r in _context.TblResult
+                            join rd in _context.TblResultDetails
+                            on r.Id equals rd.ResultId
+                            where r.AcademicYearId == tempAcademicId && r.SemesterId == tempSemesterId && (rd.Grade == "A" || rd.Grade == "B" || rd.Grade == "C")
+                            select new
+                            {
+                                Id = r.Id,
+                                YearId = r.YearLevelId,
+                                DetailsId = rd.Id,
+                                Grade = rd.Grade
+                            }
+                           ).ToList();
+
             return View();
         }
 
@@ -47,6 +103,7 @@ namespace StudentRegistrationSys.Controllers
 
             var getcurrentAcademicid = _context.TblAcademicYear.Where(a => a.Active == true).FirstOrDefault().Id;
             var getcurrentSemesterid = _context.TblSemester.Where(a => a.Active == true).FirstOrDefault().Id;
+            var getcurrentSectionid = _context.TblStudentInfo.Where(a => a.Active == true && a.AccountId == accid).FirstOrDefault().SectionId;
 
             tempacid = getcurrentSemesterid == 1 ? getcurrentAcademicid - 1 : getcurrentAcademicid;
             tempsemid = getcurrentSemesterid == 1 ? 2 : 1 ;
@@ -103,6 +160,35 @@ namespace StudentRegistrationSys.Controllers
                                 }).ToList();
 
             studentDashboardInfo.ResultDashboards = resultDashboard;
+
+            List<TimeTableInfocsDetails> timeTableInfocsDetails = new List<TimeTableInfocsDetails>();
+
+            var result = (from time in _context.TblTimeTable
+                          where time.SemesterId == tempsemid
+                          && time.YearLevelId == tempyearid && time.SectionId == getcurrentSectionid
+                          select new
+                          {
+                              Id = time.Id
+                          }).FirstOrDefault();
+
+            if(result != null)
+            {
+                timeTableInfocsDetails = (from td in _context.TblTimeTableDetails
+                                          join c in _context.TblCourse
+                                          on td.CourseId equals c.Id
+                                          where td.TimeTableId == result.Id
+                                          orderby td.Id
+                                          select new TimeTableInfocsDetails
+                                          {
+                                              CourseId = (int)td.CourseId,
+                                              PeriodId = td.PeriodId,
+                                              CourseCode = c.Code,
+                                              Day = td.Day,
+                                              Id = td.Id,
+                                              CourseName = c.Name
+                                          }).ToList();
+            }
+            studentDashboardInfo.TimeTableInfocsDetails = timeTableInfocsDetails;
 
             return View(studentDashboardInfo);
         }
