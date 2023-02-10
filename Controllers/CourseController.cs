@@ -759,27 +759,31 @@ namespace StudentRegistrationSys.Controllers
                 }    
             }
 
-            foreach (var item99 in courseSelectionInfo.PrevCourse)
+            if (courseSelectionInfo.PrevCourse != null)
             {
-                if (item99.IsSelected == true)
+                foreach (var item99 in courseSelectionInfo.PrevCourse)
                 {
-                    TblSubjectCourse tblSubjectCourse = new TblSubjectCourse()
+                    if (item99.IsSelected == true)
                     {
-                        StudentId = accid,
-                        AcademicYearId = courseSelectionInfo.NextAcademicId,
-                        Active = true,
-                        SemesterId = courseSelectionInfo.NextSemesterId,
-                        SectionId = courseSelectionInfo.NextMajorId,
-                        Code = item99.CourseCode,
-                        CourseId = item99.CourseId,
-                        CreatedDate = DateTime.Now,
-                        YearLevelId = courseSelectionInfo.NextYearLevelId
-                    };
+                        TblSubjectCourse tblSubjectCourse = new TblSubjectCourse()
+                        {
+                            StudentId = accid,
+                            AcademicYearId = courseSelectionInfo.NextAcademicId,
+                            Active = true,
+                            SemesterId = courseSelectionInfo.NextSemesterId,
+                            SectionId = courseSelectionInfo.NextMajorId,
+                            Code = item99.CourseCode,
+                            CourseId = item99.CourseId,
+                            CreatedDate = DateTime.Now,
+                            YearLevelId = courseSelectionInfo.NextYearLevelId
+                        };
 
-                    _context.TblSubjectCourse.Add(tblSubjectCourse);
-                    _context.SaveChanges();
+                        _context.TblSubjectCourse.Add(tblSubjectCourse);
+                        _context.SaveChanges();
+                    }
                 }
             }
+            
 
             var acinfo = _context.TblStudentInfo.Where(a => a.AccountId == accid && a.Active == true).FirstOrDefault();
 

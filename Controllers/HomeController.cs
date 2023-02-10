@@ -164,8 +164,8 @@ namespace StudentRegistrationSys.Controllers
             List<TimeTableInfocsDetails> timeTableInfocsDetails = new List<TimeTableInfocsDetails>();
 
             var result = (from time in _context.TblTimeTable
-                          where time.SemesterId == tempsemid
-                          && time.YearLevelId == tempyearid && time.SectionId == getcurrentSectionid
+                          where time.SemesterId == getcurrentSemesterid
+                          && time.YearLevelId == profileDashboard.YearLevelId && time.SectionId == getcurrentSectionid
                           select new
                           {
                               Id = time.Id
