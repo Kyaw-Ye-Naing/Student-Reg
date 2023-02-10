@@ -69,7 +69,7 @@ namespace StudentRegistrationSys.Controllers
                 //if (!isExist) {
                // if (semester.Active == true)
                // {
-                    _context.TblSemester.FromSqlInterpolated($"Update tbl_Semester Set Active = 0;");
+                    _context.Database.ExecuteSqlInterpolated($"Update tbl_Semester Set Active = 0;");
                 //}
                     TblSemester tblSemester = _context.TblSemester.Find(semester.Id);
 
