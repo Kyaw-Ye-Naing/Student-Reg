@@ -183,13 +183,17 @@ namespace StudentRegistrationSys.Controllers
              List<CourseSelectionDetails> courseSelections_1 = new List<CourseSelectionDetails>();
              List<CourseSelectionDetails> courseSelections_2 = new List<CourseSelectionDetails>();
             var isRegistered = false;
+            var currentDate = DateTime.Now;
 
             var accid = HttpContext.Session.GetInt32(SessionId);
 
             var getCurrentSemester = _context.TblSemester.Where(a => a.Active == true).FirstOrDefault();
             var getCurrentAcademic = _context.TblAcademicYear.Where(a => a.Active == true).FirstOrDefault();
 
-            if(getCurrentSemester.Id == 1)
+            var isValid = _context.TblTimeLimit.Any(a => a.AcademicYearId == getCurrentAcademic.Id && a.SemesterId == getCurrentSemester.Id &&
+                                                a.StartDate >= currentDate && a.EndDate <= currentDate && a.Type == "cour");
+
+            if (getCurrentSemester.Id == 1)
             {
                 var isExist = _context.TblStudentInfo.Any(a => a.AccountId == accid && a.IsRegister == false & a.AcademicYearId == getCurrentAcademic.Id);
                 if (isExist)
@@ -223,6 +227,24 @@ namespace StudentRegistrationSys.Controllers
             {
                 TempData["alert"] = "You have already selected courses!";
                 return RedirectToAction("AlertPage");
+            }
+
+            if (isRegistered == false && isValid == false)
+            {
+                var isLower = _context.TblTimeLimit.Any(a => a.AcademicYearId == getCurrentAcademic.Id && a.Type == "cour"
+                                           && a.StartDate >= currentDate && a.SemesterId == getCurrentSemester.Id);
+                if (isLower)
+                {
+                    TempData["alert"] = "Course selection does not come!";
+                    return RedirectToAction("AlertPage");
+                }
+                var isHigher = _context.TblTimeLimit.Any(a => a.AcademicYearId == getCurrentAcademic.Id && a.Type == "cour"
+                                               && a.EndDate <= currentDate && a.SemesterId == getCurrentSemester.Id);
+                if (isHigher)
+                {
+                    TempData["alert"] = "Course selection date is over!";
+                    return RedirectToAction("AlertPage");
+                }
             }
 
             var majorList = _context.TblSection.ToList();

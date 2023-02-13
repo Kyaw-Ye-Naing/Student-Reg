@@ -1,7 +1,7 @@
-﻿@model StudentRegistrationSys.Models.Data.TblAcademicYear
+﻿@model StudentRegistrationSys.Models.ViewModels.StudentInfoReportcs
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
@@ -11,10 +11,10 @@
 </style>
 <div class="card m-3">
     <div class="card-body">
-        <h1>Add Academic Year Level</h1>
+        <h1>Edit Student Account</h1>
 
         <div>
-            <a asp-action="Index">Back to List</a>
+            <a asp-action="StudentInfo" asp-controller="Report">Back to List</a>
         </div>
         <hr />
 
@@ -23,25 +23,36 @@
                 <div class="basic-form">
                     <form>
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Id" />
                         <div class="form-group">
                             <label asp-for="Name" class="control-label"></label>
-                            <input asp-for="Name" class="form-control" id="name" />
+                            <input asp-for="Name" class="form-control" id="name" required />
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
                         <div class="form-group">
+                            <label asp-for="AccountId" class="control-label"></label>
+                            <input asp-for="AccountId" class="form-control" id="accountid" required />
+                            <span asp-validation-for="AccountId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Password" class="control-label"></label>
+                            <input asp-for="Password" class="form-control" id="password" required />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
                             <label asp-for="Description" class="control-label"></label>
-                            <textarea asp-for="Description" class="form-control h-150px" rows="6" id="comment"></textarea>
+                            <textarea asp-for="Description" class="form-control h-150px" rows="6" id="description"></textarea>
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <div class="form-check mb-3">
                                 <label class="form-check-label">
-                                    <input type="checkbox" class="form-check-input" asp-for="Active" checked>Active
+                                    <input type="checkbox" class="form-check-input" asp-for="Active">Active
                                 </label>
                             </div>
                         </div>
                         <div class="form-group">
-                            <input type="submit" value="Create" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
+                            <input type="submit" value="Save" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
                         </div>
                     </form>
                 </div>
@@ -53,28 +64,28 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
-        $("form").submit(function (e) {
+    $("form").submit(function (e) {
         e.preventDefault();
-        var $form = $(this);
-        var data = $form.serialize();
-        var l = $('#ladda-button').ladda();
-        l.ladda('start');
-        swal({
-            title: "Please Wait!",
-            text: "Data Saving Time",
-            type: "success",
-            showCancelButton: false,
-            showConfirmButton: false
-        })
-        setTimeout(function () {
-            CheckLogin(data);
-        },1500)
+            var $form = $(this);
+            var data = $form.serialize();
+            var l = $('#ladda-button').ladda();
+            l.ladda('start');
+            swal({
+                title: "Please Wait!",
+                text: "Data Saving Time",
+                type: "success",
+                showCancelButton: false,
+                showConfirmButton: false
+            })
+            setTimeout(function () {
+                CheckLogin(data);
+            }, 1500)
     });
 
     function CheckLogin(data) {
         $.ajax({
             type: "POST",
-            url: '@Url.Action("SaveAcademicYear", "AcademicYear")',
+            url: '@Url.Action("EditAccount", "Student")',
             data: data,
             success: function (response) {
                 console.log("dfdsfsf", response);
@@ -83,10 +94,12 @@
                     var l = $('#ladda-button').ladda();
                     l.ladda('stop');
                     document.getElementById("name").value = "";
-                    document.getElementById("comment").value = "";
+                    document.getElementById("description").value = "";
+                    document.getElementById("password").value = "";
+                    document.getElementById("accountid").value = "";
                     toastr.success(response.message);
 
-                   // window.location.href = '@Url.Action("Index", "AcademicYear")';
+                    window.location.href = '@Url.Action("StudentInfo", "Report")';
                 }
                 else {
                    // StopLoading();
@@ -100,5 +113,6 @@
     }
     </script>
 }
+
 
 

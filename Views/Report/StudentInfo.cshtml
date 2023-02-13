@@ -103,8 +103,11 @@
                             @Html.DisplayFor(modelItem => modelItem.studentInfoReportViews[i].YearLevelName)
                         </td>
                         <td>
-                            <a class="btn btn-outline-warning" asp-action="StudentInfoDetails" asp-controller="Report" asp-route-id="@Model.studentInfoReportViews[i].Id" style="padding-top:0;padding-bottom:0;">
+                            <a class="btn btn-outline-info" asp-action="StudentInfoDetails" asp-controller="Report" asp-route-id="@Model.studentInfoReportViews[i].Id" style="padding-top:0;padding-bottom:0;">
                                 <span style="font-size:12px;"><i class="bi bi-pencil-square"></i>&nbsp;View Details</span>
+                            </a>
+                            <a class="btn btn-outline-warning" asp-action="EditStudent" asp-controller="Student" asp-route-id="@Model.studentInfoReportViews[i].Id" style="padding-top:0;padding-bottom:0;">
+                                <span style="font-size:12px;"><i class="bi bi-pencil-square"></i>&nbsp;Edit</span>
                             </a>
                             <a class="btn btn-outline-danger" asp-action="ResetPassword" asp-controller="Report" asp-route-id="@Model.studentInfoReportViews[i].Id" style="padding-top:0;padding-bottom:0;">
                                 <span style="font-size:12px;"><i class="bi bi-pencil-square"></i>&nbsp;Reset Password</span>

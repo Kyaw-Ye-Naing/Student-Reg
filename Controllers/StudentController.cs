@@ -23,18 +23,41 @@ namespace StudentRegistrationSys.Controllers
         public IActionResult Registration()
         {
             var accid = HttpContext.Session.GetInt32(SessionId);
-
             var getcurrentid = _context.TblAcademicYear.Where(a => a.Active == true).FirstOrDefault().Id;
+
+            var currentDate = DateTime.Now;
+
+            var isValid = _context.TblTimeLimit.Any(a => a.AcademicYearId == getcurrentid && a.Type == "reg" && a.StartDate >= currentDate && a.EndDate <= currentDate);
+
 
             var isRegistered = _context.TblStudentInfo.Any(a => a.AccountId == accid && a.IsRegister == true && a.AcademicYearId == getcurrentid);
 
             if (isRegistered)
             {
                 TempData["alert"] = "You have already registered!";
-                return RedirectToAction("AlertPage","Course");
+                return RedirectToAction("AlertPage", "Course");
             }
+            else
+            {
+                if (isValid)
+                {
+                    return View();
+                }
+                else
+                {
+                    var isLower = _context.TblTimeLimit.Any(a => a.AcademicYearId == getcurrentid && a.Type == "reg" && a.StartDate <= currentDate);
+                    if (isLower)
+                    {
+                        TempData["alert"] = "Does not registered";
+                    }
+                    else
+                    {
+                        TempData["alert"] = "Registration date is over";
+                    }
 
-            return View();
+                    return RedirectToAction("AlertPage", "Course");
+                }
+            }
         }
 
         // POST: Student / SaveRegistration
@@ -71,9 +94,53 @@ namespace StudentRegistrationSys.Controllers
             return View();
         }
 
+        public IActionResult EditStudent(int id)
+        {
+            StudentInfoReportcs studentInfoReportcs = new StudentInfoReportcs();
+
+            TblStudentAccount studentAccount = _context.TblStudentAccount.Find(id);
+
+            studentInfoReportcs.Id = studentAccount.Id;
+            studentInfoReportcs.Name = studentAccount.Name;
+            studentInfoReportcs.AccountId = studentAccount.AccountId;
+            studentInfoReportcs.Password = studentAccount.Password;
+            studentInfoReportcs.Active = studentAccount.Active;
+
+            return View(studentInfoReportcs);
+        }
+
         [HttpPost]
         public IActionResult SaveAccount(StudentInfoReportcs infoReportcs)
         {
+            if (infoReportcs.AccountId == null && infoReportcs.Name == null && infoReportcs.Password == null)
+            {
+                return Json(new { status = "fail", message = "Please input data!" });
+            }
+            if (infoReportcs.AccountId == null)
+            {
+                return Json(new { status = "fail", message = "Please fill AccoutId!" });
+            }
+            if (infoReportcs.Name == null)
+            {
+                return Json(new { status = "fail", message = "Please fill name!" });
+            }
+            if (infoReportcs.Password == null)
+            {
+                return Json(new { status = "fail", message = "Please fill password!" });
+            }
+
+            var isExist = _context.TblStudentAccount.Any(a => a.Active == true && a.AccountId == infoReportcs.AccountId);
+            if (isExist)
+            {
+                return Json(new { status = "fail", message = "Student account Id is already exists!" });
+            }
+
+            var isExist1 = _context.TblStudentAccount.Any(a => a.Active == true && a.Name == infoReportcs.Name);
+            if (isExist1)
+            {
+                return Json(new { status = "fail", message = "Student account name is already exists!" });
+            }
+
             TblStudentAccount studentAccount = new TblStudentAccount()
             {
                 Name = infoReportcs.Name,
@@ -104,6 +171,57 @@ namespace StudentRegistrationSys.Controllers
             };
             _context.TblStudentInfo.Add(tblStudentInfo);
             _context.SaveChanges();
+
+            return Json(new { status = "success", message = "Data Saving Successfully" });
+        }
+
+        [HttpPost]
+        public IActionResult EditAccount(StudentInfoReportcs infoReportcs)
+        {
+            if (infoReportcs.AccountId == null && infoReportcs.Name == null && infoReportcs.Password == null)
+            {
+                return Json(new { status = "fail", message = "Please input data!" });
+            }
+            if (infoReportcs.AccountId == null)
+            {
+                return Json(new { status = "fail", message = "Please fill AccoutId!" });
+            }
+            if (infoReportcs.Name == null)
+            {
+                return Json(new { status = "fail", message = "Please fill name!" });
+            }
+            if (infoReportcs.Password == null)
+            {
+                return Json(new { status = "fail", message = "Please fill password!" });
+            }
+
+            TblStudentAccount studentAccount = _context.TblStudentAccount.Find(infoReportcs.Id);
+
+            studentAccount.Name = infoReportcs.Name;
+            studentAccount.Password = infoReportcs.Password;
+            studentAccount.AccountId = infoReportcs.AccountId;
+            studentAccount.Active = infoReportcs.Active;
+            studentAccount.UpdatedDate = DateTime.Now;
+            studentAccount.Description = infoReportcs.Description;
+           
+            _context.SaveChanges();
+
+            //var getcurrentSemester = _context.TblSemester.Where(a => a.Active == true).FirstOrDefault().Id;
+            //var getcurrentAcademic = _context.TblAcademicYear.Where(a => a.Active == true).FirstOrDefault().Id;
+
+            //TblStudentInfo tblStudentInfo = new TblStudentInfo()
+            //{
+            //    AcademicYearId = getcurrentAcademic,
+            //    Active = true,
+            //    YearLevelId = 1,
+            //    SemesterId = getcurrentSemester,
+            //    AccountId = studentAccount.Id,
+            //    IsRegister = false,
+            //    IsCourseSelect = false,
+            //    IsSecondSelect = false,
+            //};
+            //_context.TblStudentInfo.Add(tblStudentInfo);
+            //_context.SaveChanges();
 
             return Json(new { status = "success", message = "Data Saving Successfully" });
         }
