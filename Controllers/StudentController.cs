@@ -27,7 +27,7 @@ namespace StudentRegistrationSys.Controllers
 
             var currentDate = DateTime.Now;
 
-            var isValid = _context.TblTimeLimit.Any(a => a.AcademicYearId == getcurrentid && a.Type == "reg" && a.StartDate >= currentDate && a.EndDate <= currentDate);
+            var isValid = _context.TblTimeLimit.Any(a => a.AcademicYearId == getcurrentid && a.Type == "reg" && a.StartDate <= currentDate && a.EndDate >= currentDate);
 
 
             var isRegistered = _context.TblStudentInfo.Any(a => a.AccountId == accid && a.IsRegister == true && a.AcademicYearId == getcurrentid);
@@ -45,7 +45,7 @@ namespace StudentRegistrationSys.Controllers
                 }
                 else
                 {
-                    var isLower = _context.TblTimeLimit.Any(a => a.AcademicYearId == getcurrentid && a.Type == "reg" && a.StartDate <= currentDate);
+                    var isLower = _context.TblTimeLimit.Any(a => a.AcademicYearId == getcurrentid && a.Type == "reg" && a.StartDate >= currentDate);
                     if (isLower)
                     {
                         TempData["alert"] = "Does not registered";

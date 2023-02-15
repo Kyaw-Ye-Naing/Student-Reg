@@ -182,7 +182,7 @@ namespace StudentRegistrationSys.Controllers
              CourseSelectionInfo courseSelectionInfo = new CourseSelectionInfo();
              List<CourseSelectionDetails> courseSelections_1 = new List<CourseSelectionDetails>();
              List<CourseSelectionDetails> courseSelections_2 = new List<CourseSelectionDetails>();
-            var isRegistered = false;
+            var isCourSelect = false;
             var currentDate = DateTime.Now;
 
             var accid = HttpContext.Session.GetInt32(SessionId);
@@ -191,7 +191,7 @@ namespace StudentRegistrationSys.Controllers
             var getCurrentAcademic = _context.TblAcademicYear.Where(a => a.Active == true).FirstOrDefault();
 
             var isValid = _context.TblTimeLimit.Any(a => a.AcademicYearId == getCurrentAcademic.Id && a.SemesterId == getCurrentSemester.Id &&
-                                                a.StartDate >= currentDate && a.EndDate <= currentDate && a.Type == "cour");
+                                                a.StartDate <= currentDate && a.EndDate >= currentDate && a.Type == "cour");
 
             if (getCurrentSemester.Id == 1)
             {
@@ -215,21 +215,21 @@ namespace StudentRegistrationSys.Controllers
 
             if (getCurrentSemester.Id == 1)
             {
-                isRegistered = _context.TblStudentInfo.Any(a => a.AccountId == accid && a.IsCourseSelect == true & a.AcademicYearId == getCurrentAcademic.Id);
+                isCourSelect = _context.TblStudentInfo.Any(a => a.AccountId == accid && a.IsCourseSelect == true & a.AcademicYearId == getCurrentAcademic.Id);
             }
             if(getCurrentSemester.Id == 2)
             {
-                isRegistered = _context.TblStudentInfo.Any(a => a.AccountId == accid && a.IsSecondSelect == true & a.AcademicYearId == getCurrentAcademic.Id);
+                isCourSelect = _context.TblStudentInfo.Any(a => a.AccountId == accid && a.IsSecondSelect == true & a.AcademicYearId == getCurrentAcademic.Id);
             }
            
 
-            if (isRegistered)
+            if (isCourSelect)
             {
                 TempData["alert"] = "You have already selected courses!";
                 return RedirectToAction("AlertPage");
             }
 
-            if (isRegistered == false && isValid == false)
+            if (isCourSelect == false && isValid == false)
             {
                 var isLower = _context.TblTimeLimit.Any(a => a.AcademicYearId == getCurrentAcademic.Id && a.Type == "cour"
                                            && a.StartDate >= currentDate && a.SemesterId == getCurrentSemester.Id);
