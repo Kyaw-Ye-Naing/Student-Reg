@@ -306,6 +306,45 @@ namespace StudentRegistrationSys.Common
             return listItems;
         }
 
+        public static List<SelectListItem> GetStudentListForReport(int? id)
+        {
+            List<SelectListItem> listItems = new List<SelectListItem>();
+            using var db = new StudentInfoContext();
+            var tblStudents = (from a in db.TblStudentAccount
+                               where a.Active == true
+                               orderby a.Name ascending
+                               select a).ToList();
+
+            if (id != 0)
+            {
+                foreach (var item in tblStudents)
+                {
+                    listItems.Add(new SelectListItem
+                    {
+                        Text = item.Name,
+                        Value = item.Id.ToString().Trim(),
+                        Selected = item.Id == id
+                    });
+                }
+            }
+            else
+            {
+                listItems.Add(new SelectListItem { Text = "All", Value = "0" });
+                foreach (var item in tblStudents)
+                {
+                    listItems.Add(new SelectListItem
+                    {
+                        Text = item.Name,
+                        Value = item.Id.ToString().Trim(),
+                        Selected = item.Id == id
+                    });
+                }
+            }
+
+
+            return listItems;
+        }
+
         public static List<SelectListItem> GetCourseList(int? id)
         {
             List<SelectListItem> listItems = new List<SelectListItem>();

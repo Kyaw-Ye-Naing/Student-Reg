@@ -33,22 +33,40 @@ namespace StudentRegistrationSys.Controllers
             ViewBag.acc = HttpContext.Session.GetInt32(SessionAccount);
             ViewBag.accid = HttpContext.Session.GetInt32(SessionId);
 
+            var studentInfoList = _context.TblStudentInfo.ToList();
+
+            AdminDashboardInfocs adminDashboard = new AdminDashboardInfocs();
+
             var currentAcademicId = _context.TblAcademicYear.Where(a => a.Active == true).FirstOrDefault().Id;
             var currentSemesterId = _context.TblSemester.Where(a => a.Active == true).FirstOrDefault().Id;
 
-            var firstyearcount = _context.TblStudentInfo.Where(a => a.Active == true && a.AcademicYearId == currentAcademicId &&
+            adminDashboard.RegisterCount = studentInfoList.Where(a => a.Active == true && a.IsRegister == true).Count();
+            adminDashboard.UnRegisterCount = studentInfoList.Where(a => a.Active == true && a.IsRegister == false).Count();
+
+            if(currentSemesterId == 1)
+            {
+                adminDashboard.CourseCount = studentInfoList.Where(a => a.Active == true && a.IsCourseSelect == true).Count();
+                adminDashboard.UnCourseCount = studentInfoList.Where(a => a.Active == true && a.IsCourseSelect == false).Count();
+            }
+            else
+            {
+                adminDashboard.CourseCount = studentInfoList.Where(a => a.Active == true && a.IsSecondSelect == true).Count();
+                adminDashboard.UnCourseCount = studentInfoList.Where(a => a.Active == true && a.IsSecondSelect == false).Count();
+            }
+
+            var firstyearcount = studentInfoList.Where(a => a.Active == true && a.AcademicYearId == currentAcademicId &&
                                 a.YearLevelId == 1).Count();
 
-            var secondyearcount = _context.TblStudentInfo.Where(a => a.Active == true && a.AcademicYearId == currentAcademicId &&
+            var secondyearcount = studentInfoList.Where(a => a.Active == true && a.AcademicYearId == currentAcademicId &&
                                 a.YearLevelId == 2).Count();
 
-            var thirdyearcount = _context.TblStudentInfo.Where(a => a.Active == true && a.AcademicYearId == currentAcademicId &&
+            var thirdyearcount = studentInfoList.Where(a => a.Active == true && a.AcademicYearId == currentAcademicId &&
                                 a.YearLevelId == 3).Count();
 
-            var fourthyearcount = _context.TblStudentInfo.Where(a => a.Active == true && a.AcademicYearId == currentAcademicId &&
+            var fourthyearcount = studentInfoList.Where(a => a.Active == true && a.AcademicYearId == currentAcademicId &&
                                 a.YearLevelId == 4).Count();
 
-            var finalyearcount = _context.TblStudentInfo.Where(a => a.Active == true && a.AcademicYearId == currentAcademicId &&
+            var finalyearcount = studentInfoList.Where(a => a.Active == true && a.AcademicYearId == currentAcademicId &&
                                 a.YearLevelId == 5).Count();
 
             int[] student = new int[5];
@@ -58,7 +76,7 @@ namespace StudentRegistrationSys.Controllers
             student[3] = fourthyearcount;
             student[4] = finalyearcount;
 
-            ViewBag.pieData = student;
+            adminDashboard.PieChartData = student;
 
             var tempAcademicId = currentSemesterId == 1 ? currentAcademicId - 1 : currentAcademicId;
             var tempSemesterId = currentSemesterId == 1 ? 2 : 1;
@@ -76,6 +94,21 @@ namespace StudentRegistrationSys.Controllers
                             }
                            ).ToList();
 
+            var groupbyResult = (from f in faillist.ToList()
+                                group f by f.YearId into fdata
+                                select new
+                                {
+                                    yearid = fdata.Key,
+                                    count = fdata.Count()
+                                }).ToList();
+
+            int[] failresult = new int[5];
+            foreach (var item in groupbyResult)
+            {
+                failresult[(int)item.yearid-1] = item.count;
+            }
+                                
+
             var passlist = (from r in _context.TblResult
                             join rd in _context.TblResultDetails
                             on r.Id equals rd.ResultId
@@ -89,7 +122,24 @@ namespace StudentRegistrationSys.Controllers
                             }
                            ).ToList();
 
-            return View();
+            var groupbyResult2 = (from f in passlist.ToList()
+                                  group f by f.YearId into fdata
+                                  select new
+                                  {
+                                      yearid = fdata.Key,
+                                      count = fdata.Count()
+                                  }).ToList();
+
+            int[] passresult = new int[5];
+            foreach (var item in groupbyResult2)
+            {
+                passresult[(int)item.yearid-1] = item.count;
+            }
+
+            adminDashboard.LineChartFailData = failresult;
+            adminDashboard.LineChartPassData = passresult;
+
+            return View(adminDashboard);
         }
 
         public IActionResult StudentIndex()
@@ -141,7 +191,8 @@ namespace StudentRegistrationSys.Controllers
                                 sbc.YearLevelId == profileDashboard.YearLevelId
                                 select new CourseDashboard
                                 {
-                                    CourseName = c.Name
+                                    CourseName = c.Name,
+                                    CourseCode = c.Code
                                 }).ToList();
 
             studentDashboardInfo.CourseDashboards = courseDashboards;

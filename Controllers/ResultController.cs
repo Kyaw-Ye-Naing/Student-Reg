@@ -22,6 +22,22 @@ namespace StudentRegistrationSys.Controllers
         // GET: Result
         public IActionResult Index()
         {
+            SearchStudentResult searchStudentResult = new SearchStudentResult();
+            var currentsid = _context.TblSemester.Where(a => a.Active == true).FirstOrDefault().Id;
+            var currentacid = _context.TblAcademicYear.Where(a => a.Active == true).FirstOrDefault().Id;
+
+            var tempsid = currentsid == 1 ? 2 : 1;
+            var tempacid = currentsid == 1 ? currentacid - 1 : currentacid;
+
+            searchStudentResult.SemesterId = Convert.ToInt32((TempData["semesterid"] == null ? tempsid : TempData["semesterid"]));
+            var sid = Convert.ToInt32((TempData["semesterid"] == null ? tempsid : TempData["semesterid"]));
+
+            searchStudentResult.YearlevelId = Convert.ToInt32((TempData["yearlevelid"] == null ? 0 : TempData["yearlevelid"]));
+            var yid = Convert.ToInt32((TempData["yearlevelid"] == null ? 0 : TempData["yearlevelid"]));
+
+            searchStudentResult.AcademicyearId = Convert.ToInt32((TempData["academicyearid"] == null ? tempacid : TempData["academicyearid"]));
+            var acid = Convert.ToInt32((TempData["academicyearid"] == null ? tempacid : TempData["academicyearid"]));
+
             var result = (from r in _context.TblResult
                           join ac in _context.TblAcademicYear
                           on r.AcademicYearId equals ac.Id
@@ -31,6 +47,7 @@ namespace StudentRegistrationSys.Controllers
                           on r.SemesterId equals s.Id
                           join st in _context.TblStudentAccount
                           on r.StudentId equals st.Id
+                          where r.SemesterId == sid && r.AcademicYearId == acid
                           select new StudentResult
                           {
                               Id = r.Id,
@@ -45,7 +62,22 @@ namespace StudentRegistrationSys.Controllers
                               Status = r.Status
                           }).ToList();
 
-            return View(result);
+            if (yid != 0)
+            {
+                result = result.Where(a => a.YearLevelId == yid).ToList();
+            }
+
+            searchStudentResult.studentResults = result;
+
+            return View(searchStudentResult);
+        }
+
+        public ActionResult Search(SearchStudentResult scl)
+        {
+            TempData["semesterid"] = scl.SemesterId;
+            TempData["yearlevelid"] = scl.YearlevelId;
+            TempData["academicyearid"] = scl.AcademicyearId;
+            return RedirectToAction("Index");
         }
 
         // GET: Result/Create

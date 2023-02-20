@@ -1,4 +1,5 @@
-﻿@{
+﻿@model StudentRegistrationSys.Models.ViewModels.AdminDashboardInfocs
+@{
     ViewData["Title"] = "Home Page";
 }
 <style>
@@ -97,6 +98,9 @@
             font-weight: bold;
         }
 </style>
+@{
+
+}
 <div class="c-container">
     <div class="row">
         <div class="col-lg-3 col-md-6 col-sm-12">
@@ -105,7 +109,7 @@
                     <i class="bi bi-person-vcard"></i>
                 </div>
                 <div class="txt-sec">
-                    <span class="count">10</span>
+                    <span class="count">@Model.RegisterCount</span>
                     <span class="text-header">Register Students</span>
                 </div>
             </div>
@@ -116,7 +120,7 @@
                     <i class="bi bi-person-fill-slash"></i>
                 </div>
                 <div class="txt-sec">
-                    <span class="count">10</span>
+                    <span class="count">@Model.UnRegisterCount</span>
                     <span class="text-header">UnRegister Students</span>
                 </div>
             </div>
@@ -127,7 +131,7 @@
                     <i class="bi bi-person-video2"></i>
                 </div>
                 <div class="txt-sec">
-                    <span class="count">10</span>
+                    <span class="count">@Model.CourseCount</span>
                     <span class="text-header">Course Students</span>
                 </div>
             </div>
@@ -138,7 +142,7 @@
                     <i class="bi bi-person-x-fill"></i>
                 </div>
                 <div class="txt-sec">
-                    <span class="count">10</span>
+                    <span class="count">@Model.UnCourseCount</span>
                     <span class="text-header">UnCourse Students</span>
                 </div>
             </div>
@@ -176,19 +180,40 @@
     <script>
         const ctx = document.getElementById('myChart');
 
+        var DataPieChart = [];
+        var FailLineData = [];
+        var PassLineData = [];
+
+    @if (Model != null)
+    {
+        @foreach(var item1 in Model.PieChartData)
+        {
+            @:DataPieChart.push(@item1);
+        }
+        @foreach(var item2 in Model.LineChartFailData)
+        {
+            @:FailLineData.push(@item2);
+        }
+        @foreach(var item3 in Model.LineChartPassData)
+        {
+            @:PassLineData.push(@item3);
+        }
+    }
+        console.log("dfsafa", DataPieChart);
+
         new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: ['First Year', 'Second Year', 'Third Year', 'Fourth Year', 'Final Year'],
                 datasets: [{
                     label: '# of pass',
-                    data: [12, 19, 3, 5, 2],
+                    data: PassLineData,
                     borderWidth: 1,
                     stack: 'Stack 0',
                 },
                 {
                     label: '# fail',
-                    data: [6, 24, 10, 2, 6],
+                    data: FailLineData,
                     borderWidth: 1,
                     stack: 'Stack 1',
                 }]
@@ -224,7 +249,7 @@
                 datasets: [
                     {
                         label: 'Dataset 1',
-                        data: [12, 19, 3, 5, 2, 3],
+                        data: DataPieChart,
                         //backgroundColor: Object.values(Utils.CHART_COLORS),
                     }]
             },

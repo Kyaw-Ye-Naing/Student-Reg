@@ -24,6 +24,9 @@ namespace StudentRegistrationSys.Controllers
             infoReportView.Status = (TempData["status"] == null ? "all" : TempData["status"]).ToString();
             var status = (TempData["status"] == null ? "all" : TempData["status"]).ToString();
 
+            infoReportView.YearlevelId = Convert.ToInt32(TempData["yearlevelId"] == null ? 0 : TempData["yearlevelId"]);
+            var yearid = Convert.ToInt32(TempData["yearlevelId"] == null ? 0 : TempData["yearlevelId"]);
+
             studentInfo = (from stu in _context.TblStudentAccount
                            join det in _context.TblStudentInfo
                            on stu.Id equals det.AccountId
@@ -40,6 +43,11 @@ namespace StudentRegistrationSys.Controllers
                                YearLevelId = (int)det.YearLevelId,
                                YearLevelName = y.Name
                            }).ToList();
+
+            if (yearid != 0)
+            {
+                studentInfo = studentInfo.Where(a => a.YearLevelId == yearid).ToList();
+            }
 
             if(status == "active")
             {
@@ -149,6 +157,7 @@ namespace StudentRegistrationSys.Controllers
         public IActionResult Search(StudentInfoReportView scl)
         {
             TempData["status"] = scl.Status;
+            TempData["yearlevelId"] = scl.YearlevelId;
             return RedirectToAction("StudentInfo");
         }
 

@@ -45,6 +45,7 @@ namespace StudentRegistrationSys.Models.ViewModels
     public class StudentInfoReportView
     {
         public string Status { get; set; }
+        public int YearlevelId { get; set; }
         public List<StudentInfoReportViewDetails> studentInfoReportViews { get; set; }
     }
 

@@ -1,5 +1,5 @@
-﻿@model IEnumerable<StudentRegistrationSys.Models.ViewModels.StudentResult>
-
+﻿@model StudentRegistrationSys.Models.ViewModels.SearchStudentResult
+@using StudentRegistrationSys.Common
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -26,6 +26,47 @@
 <input type="hidden" value="@ViewBag.Noti" id="hfNoti" />
 
 <div class="card m-2">
+    <div class="card-body" style="padding:1rem;">
+        <h4>Filter Result</h4>
+        <form asp-action="Search" asp-controller="Result" formaction="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="row">
+                <div class="col-3">
+                    <div class="form-group">
+                        <label asp-for="AcademicyearId" class="control-label">Academicyear</label>
+                        <select id="ac-year" class="form-control" asp-for="AcademicyearId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetAcademicYearList(Model.SemesterId)">
+                        </select>
+                        <input type="hidden" asp-for="AcademicyearId" />
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label asp-for="SemesterId" class="control-label">Semester</label>
+                        <select id="semester" class="form-control" asp-for="SemesterId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetSemesterListForReport(Model.SemesterId)">
+                        </select>
+                        <input type="hidden" asp-for="SemesterId" />
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label asp-for="YearlevelId" class="control-label">YearLevel</label>
+                        <select id="year-level" class="form-control" asp-for="YearlevelId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetYearLevelForReport(Model.YearlevelId)">
+                        </select>
+                        <input type="hidden" asp-for="YearlevelId" />
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group" style="margin-top:1.6rem;">
+                        <input type="submit" value="View" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card m-2">
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center">
             <h1>Student Result List</h1>
@@ -39,52 +80,52 @@
                     Add New
                 </button>
             </div>
-            
+
         </div>
 
         <table id="myTable" class="tablentable-sm table-striped table-bordered" style="width:100%">
             <thead>
                 <tr class="bg-primary">
                     <th>
-                        @Html.DisplayNameFor(model => model.StudentName)
+                        StudentName
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.AcademicYearName)
+                        AcademicYearName
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.YearLevelName)
+                        YearLevelName
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.SemesterName)
+                        SemesterName
                     </th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @for(var i = 0 ; i < Model.studentResults.Count ; i++)
                 {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StudentName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.AcademicYearName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.YearLevelName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.SemesterName)
-                    </td>
-                    <td>
-                        <a class="btn btn-outline-warning" asp-action="Edit" asp-controller="Result" asp-route-id="@item.Id" style="padding-top:0;padding-bottom:0;">
-                            <span style="font-size:12px;"><i class="bi bi-pencil-square"></i>&nbsp;Manage</span>
-                        </a>
-                        <a class="btn btn-outline-warning" asp-action="Details" asp-controller="Result" asp-route-id="@item.Id" style="padding-top:0;padding-bottom:0;">
-                            <span style="font-size:12px;"><i class="bi bi-pencil-square"></i>&nbsp;View</span>
-                        </a>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => modelItem.studentResults[i].StudentName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => modelItem.studentResults[i].AcademicYearName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => modelItem.studentResults[i].YearLevelName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => modelItem.studentResults[i].SemesterName)
+                        </td>
+                        <td>
+                            <a class="btn btn-outline-warning" asp-action="Edit" asp-controller="Result" asp-route-id="@Model.studentResults[i].Id" style="padding-top:0;padding-bottom:0;">
+                                <span style="font-size:12px;"><i class="bi bi-pencil-square"></i>&nbsp;Manage</span>
+                            </a>
+                            <a class="btn btn-outline-warning" asp-action="Details" asp-controller="Result" asp-route-id="@Model.studentResults[i].Id" style="padding-top:0;padding-bottom:0;">
+                                <span style="font-size:12px;"><i class="bi bi-pencil-square"></i>&nbsp;View</span>
+                            </a>
+                        </td>
+                    </tr>
                 }
             </tbody>
             <tfoot>

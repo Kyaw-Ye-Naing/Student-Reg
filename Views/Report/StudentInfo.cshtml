@@ -1,5 +1,5 @@
 ﻿@model StudentRegistrationSys.Models.ViewModels.StudentInfoReportView
-
+@using StudentRegistrationSys.Common
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -36,9 +36,17 @@
         <h4>Filter Account</h4>
         <form asp-action="Search" asp-controller="Report" formaction="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-          
-            <div class="form-inline">
-              
+            <div class="row">
+                <div class="col-3">
+                    <div class="form-group">
+                        <label asp-for="YearlevelId" class="control-label">YearLevel</label>
+                        <select id="year-level" class="form-control" asp-for="YearlevelId" asp-items="@(IEnumerable<SelectListItem>)clsDropdownhelper.GetYearLevelForReport(Model.YearlevelId)">
+                        </select>
+                        <input type="hidden" asp-for="YearlevelId" />
+                    </div>
+                </div>
+                <div class="form-inline">
+
                     <div class="form-check mr-3">
                         <input type="radio" class="form-check-input radio-input" asp-for="Status" value="active">Active
                     </div>
@@ -51,44 +59,43 @@
                     <div class="form-group">
                         <input type="submit" value="View" class="btn btn-primary" data-spinner-color="#fff" id="ladda-button" data-style="zoom-in" />
                     </div>
-                    
-                
+                </div>
             </div>
         </form>
     </div>
 </div>
 
-    <div class="card m-2">
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
-                <h1>Student Info Report</h1>
-                <button class="btn btn-outline-primary" id="create">
-                    <i class="bi bi-plus-circle"></i>&nbsp;
-                    Add New Account
-                </button>
-            </div>
+<div class="card m-2">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>Student Info Report</h1>
+            <button class="btn btn-outline-primary" id="create">
+                <i class="bi bi-plus-circle"></i>&nbsp;
+                Add New Account
+            </button>
+        </div>
 
-            <table id="myTable" class="table table-sm table-striped table-bordered" style="width:100%">
-                <thead>
-                    <tr class="bg-primary">
-                        <th>
-                            Name
-                        </th>
-                        <th>
-                            AccountId
-                        </th>
-                        <th>
-                            Email
-                        </th>
-                        <th>
-                          Year Level
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for(var i = 0; i < Model.studentInfoReportViews.Count ;i++)
-                    {
+        <table id="myTable" class="table table-sm table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr class="bg-primary">
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        AccountId
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Year Level
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (var i = 0; i < Model.studentInfoReportViews.Count; i++)
+                {
                     <tr>
                         <td>
                             @Html.DisplayFor(modelItem => modelItem.studentInfoReportViews[i].Name)
@@ -114,18 +121,18 @@
                             </a>
                         </td>
                     </tr>
-                    }
-                </tbody>
-                <tfoot>
+                }
+            </tbody>
+            <tfoot>
 
-                </tfoot>
-            </table>
-        </div>
+            </tfoot>
+        </table>
     </div>
+</div>
 
-    <!-- Page-Level Scripts -->
-    @section Scripts{
-        <script>
+<!-- Page-Level Scripts -->
+@section Scripts{
+    <script>
         $(document).ready(function () {
              $('#myTable').DataTable({
                  "pageLength": 5,
@@ -136,8 +143,8 @@
         $("#create").click(function () {
             window.location.href = '@Url.Action("CreateStudent", "Student")';
         });
-        </script>
-    }
+    </script>
+}
 
 
 

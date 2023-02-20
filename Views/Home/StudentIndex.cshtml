@@ -34,7 +34,7 @@
                         @for (var i = 0; i < Model.CourseDashboards.Count; i++)
                         {
 
-                            <span><i class="bi bi-book-half"></i>&nbsp;&nbsp;@Model.CourseDashboards[i].CourseName</span>
+                    <span><i class="bi bi-book-half"></i>&nbsp;@Model.CourseDashboards[i].CourseName&nbsp;(@Model.CourseDashboards[i].CourseCode)</span>
                         }
 
                     }

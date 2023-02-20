@@ -31,7 +31,7 @@
                     <span>
                         @Html.DisplayFor(modelItem => modelItem.NextCourse[i].CourseCode)&nbsp;
                         @Html.DisplayFor(modelItem => modelItem.NextCourse[i].CourseName)
-                        @if (@Model.NextCourse[i].Description == "elective")
+                        @if (@Model.NextCourse[i].Description == "elective" || Model.NextCourse[i].Description == "elective1" || Model.NextCourse[i].Description == "elective2")
                         {
                             <span>(elective)</span>
                         }

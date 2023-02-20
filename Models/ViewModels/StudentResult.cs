@@ -5,6 +5,15 @@ using System.Threading.Tasks;
 
 namespace StudentRegistrationSys.Models.ViewModels
 {
+    public class SearchStudentResult
+    {
+        public int StudentId { get; set; }
+        public int AcademicyearId { get; set; }
+        public int SemesterId { get; set; }
+        public int YearlevelId { get; set; }
+        public List<StudentResult> studentResults { get; set; }
+    }
+
     public class StudentResult
     {
         public int Id { get; set; }

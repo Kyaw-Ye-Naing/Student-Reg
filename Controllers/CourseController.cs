@@ -470,6 +470,16 @@ namespace StudentRegistrationSys.Controllers
             {
                 return Json(new { status = "fail", message = "You cannot choose two elective course!" });
             }
+            var elective1 = nextActivelist.Where(a => a.IsSelected == true && a.Description == "elective1").ToList();
+            if (elective1 != null && elective1.Count == 2)
+            {
+                return Json(new { status = "fail", message = "You cannot choose japan and english course!" });
+            }
+            var elective2 = nextActivelist.Where(a => a.IsSelected == true && a.Description == "elective2").ToList();
+            if (elective2 != null && elective2.Count == 2)
+            {
+                return Json(new { status = "fail", message = "You cannot choose VLSI and HCI course!" });
+            }
 
             if (courseSelectionInfo.NextYearLevelId != 1)//---contain D
             {
