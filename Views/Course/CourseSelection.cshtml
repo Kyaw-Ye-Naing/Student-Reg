@@ -29,14 +29,53 @@
                     <input type="hidden" asp-for="NextCourse[i].CourseName" />
                     <input type="hidden" asp-for="NextCourse[i].Description" />
                     <span>
-                        @Html.DisplayFor(modelItem => modelItem.NextCourse[i].CourseCode)&nbsp;
-                        @Html.DisplayFor(modelItem => modelItem.NextCourse[i].CourseName)
-                        @if (@Model.NextCourse[i].Description == "elective" || Model.NextCourse[i].Description == "elective1" || Model.NextCourse[i].Description == "elective2")
+                        @if (@Model.NextMajor == "Embedded System")
                         {
-                            <span>(elective)</span>
+                            if (@Model.NextCourse[i].CourseCode != "CST-5051")
+                            {
+                                <span>@Html.DisplayFor(modelItem => modelItem.NextCourse[i].CourseCode) &nbsp;</span>
+                                <span>
+                                    @Html.DisplayFor(modelItem => modelItem.NextCourse[i].CourseName)
+                                </span>
+                            }
+                        }
+                        else
+                        {
+                            <span>@Html.DisplayFor(modelItem => modelItem.NextCourse[i].CourseCode) &nbsp;</span>
+                            <span>
+                                @Html.DisplayFor(modelItem => modelItem.NextCourse[i].CourseName)
+                            </span>
+                        }
+
+                        @if (@Model.NextCourse[i].Description == "elective" || Model.NextCourse[i].Description == "elective1" || Model.NextCourse[i].Description == "elective2"
+                        || Model.NextCourse[i].Description == "elective3")
+                        {
+                            if (@Model.NextMajor == "Computer Communication and Network" || @Model.NextMajor == "Embedded System")
+                            {
+                                if (@Model.NextCourse[i].CourseCode != "CST-5051")
+                                {
+                                    <span> (elective) </span>
+                                }
+
+                            }
+                            else
+                            {
+                                <span> (elective) </span>
+                            }
+
                         }
                     </span>
-                    <input type="checkbox" class="form-check" asp-for="NextCourse[i].IsSelected" />
+                    @if (@Model.NextMajor == "Embedded System")
+                    {
+                        if (@Model.NextCourse[i].CourseCode != "CST-5051")
+                        {
+                            <input type="checkbox" class="form-check" asp-for="NextCourse[i].IsSelected" />
+                        }
+                    }
+                    else
+                    {
+                        <input type="checkbox" class="form-check" asp-for="NextCourse[i].IsSelected" />
+                    }
                 </div>
                     @*<div class="course-gp">
                         <span>(CST-1002) English</span>

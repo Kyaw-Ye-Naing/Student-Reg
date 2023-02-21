@@ -12,11 +12,11 @@
 .imx {
     display: flex;
     flex-wrap: wrap;
-    gap: 2rem;
+    gap: 1.5rem;
 }
 
     .imx .bio {
-        width: 700px;
+        width: 600px;
         background-color: #fff;
         box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
         padding: 1rem;
@@ -48,8 +48,8 @@
     }
 
 .imx .course {
-    width: 400px;
-    height: 200px;
+    width: 500px;
+    height: 210px;
     background-color: #fff;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     padding: 1rem;
@@ -101,11 +101,14 @@
 
 @media only screen and (max-width:1480px) {
     .imx .bio {
-        width: 600px;
+        width: 500px;
+    }
+    .bio .img-par {
+        gap: 1rem;
     }
     .imx .course {
-        width: 350px;
-        height: 200px;
+        width: 450px;
+        height: 210px;
     }
     .result {
         width: 450px;

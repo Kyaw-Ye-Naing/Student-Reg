@@ -377,7 +377,13 @@ namespace StudentRegistrationSys.Controllers
 
                 if (getsectionCode.Name == "BIS" || getsectionCode.Name == "HPC" || getsectionCode.Name == "SE" || getsectionCode.Name == "KE")
                 {
-                    nextyear_courses = nextyear_courses.Where(a => a.MajorCode == "CS" || a.MajorCode == getsectionCode.Name || a.MajorCode == "CST").ToList();
+                    if (getYearLevel.YearLevelId == 4)
+                    {
+                        nextyear_courses = nextyear_courses.Where(a => a.MajorCode == "CS" || a.MajorCode == getsectionCode.Name || a.MajorCode == "CST").ToList();
+                    }
+                    else { 
+                        nextyear_courses = nextyear_courses.Where(a => a.MajorCode == "CS" || a.MajorCode == getsectionCode.Name || a.MajorCode == "CST").ToList();
+                    }
                 }
                 if(getsectionCode.Name == "Computer Communication and Network")
                 {
@@ -423,6 +429,7 @@ namespace StudentRegistrationSys.Controllers
             var courseList = _context.TblCourse.ToList();
             var prevCount = 0;
             List<CourseSelectionDetails> prevActivelist = new List<CourseSelectionDetails>();
+            var majorId = _context.TblStudentInfo.Where(a => a.Active == true && a.AccountId == accid).FirstOrDefault().SectionId;
 
             if (courseSelectionInfo.PrevCourse != null)
             {
@@ -479,6 +486,11 @@ namespace StudentRegistrationSys.Controllers
             if (elective2 != null && elective2.Count == 2)
             {
                 return Json(new { status = "fail", message = "You cannot choose VLSI and HCI course!" });
+            }
+            var elective3 = nextActivelist.Where(a => a.IsSelected == true && a.Description == "elective3").ToList();
+            if (elective3 != null && elective3.Count == 2 && majorId != 9)
+            {
+                return Json(new { status = "fail", message = "You cannot choose System Resource Management and Data Mining course!" });
             }
 
             if (courseSelectionInfo.NextYearLevelId != 1)//---contain D
@@ -656,15 +668,21 @@ namespace StudentRegistrationSys.Controllers
                  
                     foreach (var item89 in prelist)
                     {
-                        var grade = prevCourseHistory.Where(a => a.CourseId == item89.PassCourseId).FirstOrDefault().Grade;
-                        if (grade == "D")
+                        var isExist987 = prevCourseHistory.Any(a => a.CourseId == item89.PassCourseId);
+                        if (isExist987)
                         {
-                            var code = courseList.Where(a => a.Id == item89.PassCourseId).FirstOrDefault().Code;
-                            return Json(new
-                            { status = "fail",
-                              message = item56.CourseCode + " and " + code + " is prerequisite course! You fail " + code
-                            });
+                            var grade = prevCourseHistory.Where(a => a.CourseId == item89.PassCourseId).FirstOrDefault().Grade;
+                            if (grade == "D")
+                            {
+                                var code = courseList.Where(a => a.Id == item89.PassCourseId).FirstOrDefault().Code;
+                                return Json(new
+                                {
+                                    status = "fail",
+                                    message = item56.CourseCode + " and " + code + " is prerequisite course! You fail " + code
+                                });
+                            }
                         }
+                       
                     }
                 }
 
