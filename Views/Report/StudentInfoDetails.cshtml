@@ -27,7 +27,7 @@
 
 <div class="card m-2">
     <div class="card-body">
-        <h1>Student Info Report</h1>
+        <h1>Student Info Details</h1>
         <div>
             <a asp-action="StudentInfo">Back to List</a>
         </div>
@@ -40,17 +40,17 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
                             <label asp-for="Name" class="control-label"></label>
-                            <input asp-for="Name" class="form-control" id="name" />
+                            <input asp-for="Name" class="form-control" id="name" readonly/>
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="AccountId" class="control-label"></label>
-                            <input asp-for="AccountId" class="form-control" id="name" />
+                            <input asp-for="AccountId" class="form-control" id="name" readonly/>
                             <span asp-validation-for="AccountId" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="Email" class="control-label"></label>
-                            <input asp-for="Email" class="form-control" id="comment" />
+                            <input asp-for="Email" class="form-control" id="comment" readonly/>
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                        
@@ -58,28 +58,28 @@
                     <div class="col-12 col-lg-5 col-md-5">
                         <div class="form-group">
                             <label asp-for="Address" class="control-label"></label>
-                            <input asp-for="Address" class="form-control" id="comment" />
+                            <input asp-for="Address" class="form-control" id="comment" readonly/>
                             <span asp-validation-for="Address" class="text-danger"></span>
                         </div>
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
                                     <label asp-for="Gender" class="control-label"></label>
-                                    <input asp-for="Gender" class="form-control" id="comment" />
+                                    <input asp-for="Gender" class="form-control" id="comment" readonly/>
                                     <span asp-validation-for="Gender" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
                                     <label asp-for="DegreeProgram" class="control-label"></label>
-                                    <input asp-for="DegreeProgram" class="form-control" id="comment" />
+                                    <input asp-for="DegreeProgram" class="form-control" id="comment" readonly/>
                                     <span asp-validation-for="DegreeProgram" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
                             <div class="form-group">
                                 <label asp-for="Phone" class="control-label"></label>
-                                <input asp-for="Phone" class="form-control" id="comment" />
+                                <input asp-for="Phone" class="form-control" id="comment"readonly />
                                 <span asp-validation-for="Phone" class="text-danger"></span>
                             </div>
                         </div>
